@@ -1,0 +1,60 @@
+repos:
+
+- repo: local
+  hooks:
+    - id: aspell-check
+      name: Aspell Spell Checker
+      description: Spell-check LaTeX files and fail on unknown words
+      entry: >
+        bash -c 'for file in "$@"; do
+          output=$(aspell --mode=tex list < "$file" | sort -u);
+          if [ -n "$output" ]; then
+            echo "$output";
+            exit 1;
+          fi;
+        done' --
+      language: system
+      files: \.(md|txt|tex)$
+
+    - id: latexmk-compile
+      name: LaTeX compile with latexmk (biber enforced)
+      description: Compile LaTeX using latexmk with biber, fail on error
+      entry: >
+        bash -c 'set -e;
+        for file in "$@"; do
+          echo "📄 Checking $file with latexmk (biber)...";
+          latexmk -pdf -silent -use-make -e "\$bibtex = \"biber\"" "$file" || {
+            echo "❌ latexmk failed on $file";
+            exit 1;
+          };
+        done' --
+      language: system
+      files: \.(md|txt|tex)$
+    
+- repo: https://github.com/amperser/proselint
+  rev: 0.14.0
+  hooks:
+      - id: proselint
+        files: \.(md|txt|tex)$
+
+- repo: https://github.com/jonasbb/pre-commit-latex-hooks
+  rev: v1.4.0
+  hooks:
+      - id: american-eg-ie
+      - id: cleveref-capitalization
+      - id: consistent-spelling
+        args:
+          - --emph=et al.
+          - --emph=a priori
+          - --emph=a posteriori
+          - --regex=naive=\\bna(i|\\\"i)ve
+      - id: csquotes
+      - id: ensure-labels-for-sections
+      # Uncomment to ignore label content
+      # args:
+      #   - --ignore-label-content
+      - id: no-space-in-cite
+      - id: tilde-cite
+      - id: unique-labels
+      - id: cleveref-instead-of-autoref
+
