@@ -1,0 +1,27 @@
+% usage:
+% pandoc file.md -o file.pdf --pdf-engine=xelatex -H md2pdftemplate.tex
+% you can change margins and fontsize below
+% 
+
+\usepackage[margin=0.85in]{geometry} % For controlling page margins
+\usepackage{amsmath} % For math symbols if needed
+\usepackage{listings} % For code blocks
+
+
+%\usepackage{fontspec}
+\setmainfont{Lato}
+\usepackage{hyperref}
+
+% Optional: font size, if you want it forced
+\renewcommand\normalsize{\fontsize{11}{13}\selectfont}
+\normalsize
+
+\usepackage{csquotes}
+\MakeOuterQuote{"}
+
+\pagestyle{empty} % <-- suppress page numbers
+
+\let\OldRule\rule
+\renewcommand{\rule}[2]{\OldRule{\linewidth}{#2}} % Redefine \rule to use \linewidth
+
+
