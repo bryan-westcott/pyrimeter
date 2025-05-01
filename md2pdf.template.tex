@@ -1,0 +1,38 @@
+% usage:
+% pandoc file.md -o file.pdf --pdf-engine=xelatex -H file.template.tex
+% you can change margins and fontsize below
+% Note: it will put its own documentclass
+
+% Optional: font size, if you want it forced
+\newcommand{\docfontsize}{11}
+\newcommand{\docbaselineskip}{13}
+\newcommand{\docmargins}{0.75in}
+
+\usepackage[margin=\docmargins]{geometry} % For controlling page margins
+\usepackage{amsmath} % For math symbols if needed
+\usepackage{listings} % For code blocks
+
+% Use modern lato font
+\usepackage{fontspec}
+\setmainfont{Lato}
+\usepackage{hyperref}
+
+
+% override fontsize
+\renewcommand\normalsize{%
+  \fontsize{\docfontsize}{\docbaselineskip}\selectfont
+}
+\normalsize
+
+% fix quotes automatically, will not fix apostrophes to make them curly
+\usepackage{csquotes}
+\MakeOuterQuote{"}
+
+% suppress page number
+\pagestyle{empty} 
+
+% Redefine \rule to use \linewidth for full-page markdown lines
+\let\OldRule\rule
+\renewcommand{\rule}[2]{\OldRule{\linewidth}{#2}} 
+
+
