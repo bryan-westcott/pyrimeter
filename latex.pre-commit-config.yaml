@@ -15,7 +15,7 @@ repos:
             done
           ' --
         language: system
-        files: \.tex$
+        files: \.(txt|md|tex)$
 
       - id: proselint-local
         name: Proselint (local install)
@@ -52,10 +52,19 @@ repos:
         entry: >
           bash -c '
             for file in "$@"; do
-              base="${file%.md}"
-              output="${base}.pdf"
-              echo "📄 Converting $file -> $output"
-              pandoc "$file" -o "$output" --pdf-engine=xelatex -H md2pdftemplate.tex
+              dir=$(dirname "$file")
+              name=$(basename "$file" .md)
+              output="${dir}/${name}.pdf"
+              template="${dir}/${name}.tex.template"
+      
+              echo "📄 Converting $file -> $output using template $template"
+      
+              if [ ! -f "$template" ]; then
+                echo "❌ Template not found: $template"
+                exit 1
+              fi
+      
+              pandoc "$file" -o "$output" --pdf-engine=xelatex --template="$template"
             done
           ' --
         language: system
