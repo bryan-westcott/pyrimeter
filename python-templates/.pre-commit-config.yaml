@@ -10,47 +10,47 @@ repos:
     hooks:
       - id: update-prettier-version-from-pyproject-toml
         name: update prettier version in pre-commit
-        entry: /bin/bash -c "scripts/update-pre-commit-versions-from-pyproject-toml.sh prettier"
+        entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh prettier"
         language: script
         require_serial: true
       - id: update-shellcheck-version-from-pyproject-toml
         name: update shellcheck version in pre-commit
-        entry: /bin/bash -c "scripts/update-pre-commit-versions-from-pyproject-toml.sh shellcheck"
+        entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh shellcheck"
         language: script
         require_serial: true
       - id: update-docformatter-version-from-pyproject-toml
         name: update docformatter version in pre-commit
-        entry: /bin/bash -c "scripts/update-pre-commit-versions-from-pyproject-toml.sh docformatter"
+        entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh docformatter"
         language: script
         require_serial: true
       - id: update-ruff-version-from-pyproject-toml
         name: update ruff version in pre-commit
-        entry: /bin/bash -c "scripts/update-pre-commit-versions-from-pyproject-toml.sh ruff"
+        entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh ruff"
         language: script
         require_serial: true
       - id: update-mypy-version-from-pyproject-toml
         name: update mypy version in pre-commit
-        entry: /bin/bash -c "scripts/update-pre-commit-versions-from-pyproject-toml.sh mypy"
+        entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh mypy"
         language: script
         require_serial: true
       - id: update-hadolint-version-from-pyproject-toml
         name: update hadolint version in pre-commit
-        entry: /bin/bash -c "scripts/update-pre-commit-versions-from-pyproject-toml.sh hadolint"
+        entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh hadolint"
         language: script
         require_serial: true
       - id: update-action-validator-version-from-pyproject-toml
         name: update action-validator version in pre-commit
-        entry: /bin/bash -c "scripts/update-pre-commit-versions-from-pyproject-toml.sh action-validator"
+        entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh action-validator"
         language: script
         require_serial: true
       - id: update-yamllint-version-from-pyproject-toml
         name: update yamllint version in pre-commit
-        entry: /bin/bash -c "scripts/update-pre-commit-versions-from-pyproject-toml.sh yamllint"
+        entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh yamllint"
         language: script
         require_serial: true
       - id: update-uv-pre-commit-version-from-pyproject-toml
         name: update uv-pre-commit version in pre-commit
-        entry: /bin/bash -c "scripts/update-pre-commit-versions-from-pyproject-toml.sh uv-pre-commit"
+        entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh uv-pre-commit"
         language: script
         require_serial: true
 
@@ -155,7 +155,7 @@ repos:
             src,
           ]
 
-  # check bash/shell scripts
+  # check bash/shell dev-scripts
   # note: install shellcheck with:
   #   sudo apt install shellcheck (0.8.0 for ubuntu 22.04)
   - repo: https://github.com/koalaman/shellcheck-precommit
