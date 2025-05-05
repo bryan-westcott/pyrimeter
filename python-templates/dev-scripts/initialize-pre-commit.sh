@@ -36,7 +36,8 @@ source $HOME/.bashrc
 rustup toolchain install stable
 
 # install pre-commit and hooks
-sudo apt install pre-commit
+# Newer versions of pre-commit will break mypy hook
+uv add --dev pre-commit==2.17
 pre-commit clean && pre-commit install --install-hooks
 
 # test run
