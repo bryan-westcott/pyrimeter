@@ -73,10 +73,10 @@ repos:
     hooks:
       - id: ruff
         name: ruff
-        language_version: python3.10
+        language_version: python3.11
       - id: ruff-format
         name: ruff-format
-        language_version: python3.10
+        language_version: python3.11
 
   # mypy - lint-like type checking
   # Note: mypy installed in pyproject dev group
@@ -85,7 +85,7 @@ repos:
     hooks:
       - id: mypy
         name: mypy
-        language_version: python3.10
+        language_version: python3.11
         additional_dependencies:
           [
             "matplotlib-stubs",
@@ -155,7 +155,7 @@ repos:
             src,
           ]
 
-  # check bash/shell dev-scripts
+  # check bash/shell scripts
   # note: install shellcheck with:
   #   sudo apt install shellcheck (0.8.0 for ubuntu 22.04)
   - repo: https://github.com/koalaman/shellcheck-precommit

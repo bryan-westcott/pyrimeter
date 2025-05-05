@@ -4,7 +4,7 @@
 update_pre_commit_versions() {
     root_dir=${pwd}
     local pyproject_toml_path="${root_dir?}/pyproject.toml"
-    local pre-commit-conifg_yaml_path="${root_dir?}/.pre-commit-config.yaml"
+    local pre_commit_config_yaml_path="${root_dir?}/.pre-commit-config.yaml"
     local tool_name=${1?}
     local repo_url=".${tool_name?}.*"
 
@@ -21,5 +21,5 @@ update_pre_commit_versions() {
 
 # Check if the script is being sourced or executed
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    update_pre_commit ${1?} ${2}
+    update_pre_commit_versions ${1?} ${2}
 fi
