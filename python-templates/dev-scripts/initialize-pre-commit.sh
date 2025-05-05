@@ -41,4 +41,4 @@ uv add --dev pre-commit==2.17
 pre-commit clean && pre-commit install --install-hooks
 
 # test run
-pre-commit run -a
+uv run pre-commit run -a
