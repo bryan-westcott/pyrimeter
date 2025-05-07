@@ -1,5 +1,12 @@
 Bolierplate template for a python project with UV and pre-commit linting
 
+* Quick start:
+    * run once: `./dev-scripts/initialize-pre-commit.sh`
+    * fill in placeholders in pyproject.toml
+    * source (not run): `source dev-scripts/dev-init.sh`
+    * place modules in `src/<project_name>/`
+    * launch jupyter and select project kernel
+
 * To prep variables:
 ```bash
     SOURCE_DIR=$(pwd)
