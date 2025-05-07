@@ -27,8 +27,11 @@ token.txt
 notebooks
 *.egg-info
 
-node_modules/
 package-lock.json
+node_modules
 package.json
 lint_result.txt
 
+*.xlsx
+*.pdf
+*.log
