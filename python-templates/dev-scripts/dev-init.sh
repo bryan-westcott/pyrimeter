@@ -48,12 +48,13 @@ fi
 echo "🧹 Removing default 'python3' kernel if present..."
 jupyter kernelspec remove -y python3 || true
 
-echo "🧠 Registering Jupyter kernel..."
+KERNEL_NAME="$(basename "$PROJECT_ROOT")"
+echo "🧠 Registering Jupyter kernel: ${KERNEL_NAME?}..."
 if ! uv run ipython kernel install \
   --user \
   --env VIRTUAL_ENV "$PROJECT_ROOT/.venv" \
-  --name pgcad \
-  --display-name "pgcad"; then
+  --name "${KERNEL_NAME?}" \
+  --display-name "${KERNEL_NAME?}"; then
   echo "❌ Kernel registration failed — possibly missing ipykernel or misconfigured .venv"
   echo "   Try: uv sync --dev --group notebook"
   (return 1 2>/dev/null) || true  # Prevent terminal exit if sourced
@@ -61,5 +62,5 @@ fi
 
 echo "✅ Dev environment ready, launch with:"
 echo "uv run --with notebook jupyter lab"
-echo "and select pgcad kernel"
+echo "and select ${KERNEL_NAME?} kernel"
 
