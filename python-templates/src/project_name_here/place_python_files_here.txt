@@ -1,0 +1,4 @@
+Place project python modules here
+    reference them internally with .module
+    reference them externally with project_name.module
+The pyproject.toml will build an egg and install them in editable mode
