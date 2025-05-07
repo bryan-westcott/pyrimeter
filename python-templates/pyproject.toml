@@ -145,6 +145,7 @@ exclude = [
     ".git",
     ".git-rewrite",
     ".hg",
+    ".ipynb",
     ".ipynb_checkpoints",
     ".mypy_cache",
     ".nox",
@@ -177,6 +178,7 @@ exclude = [
     "advanced_lora*",
     "lcm_distill*",
 ]
+extend-exclude = ["*.ipynb"]
 # Black uses 88, default is 240
 line-length = 88
 indent-width = 4
