@@ -13,25 +13,24 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "boto3-stubs>=1.35.81",
-    "matplotlib-stubs>=0.2.0",
-    "ml-dtypes>=0.4.1",
-    "mypy-boto3-s3>=1.35.76.post1",
-    "mypy>=1.14.1",
-    "pandas-stubs>=2.2.3.241126",
+    "boto3-stubs>=1.38.10",
+    "docformatter>=1.7.5",
+    "matplotlib-stubs>=0.1.0",
+    "ml-dtypes>=0.5.1",
+    "mypy>=1.15.0",
+    "mypy-boto3-s3>=1.38.0",
+    "pandas-stubs>=2.2.3.250308",
     "pre-commit==2.17",  # newer versions broken
+    "ruff>=0.11.8",
     "types-pillow>=10.2.0.20240822",
     "types-python-dateutil>=2.9.0.20241206",
-    "types-pytz>=2024.2.0.20241003",
-    "types-pyyaml>=6.0.12.20240917",
-    "types-requests>=2.32.0.20241016",
-    "types-tqdm>=4.67.0.20241119",
-    "ruff>=0.9.2",
-    "black>=24.10.0",
-    "docformatter>=1.7.5",
-    "types-openpyxl>=3.1.5.20241225",
-    "yamllint>=1.35.1",
+    "types-pytz>=2025.2.0.20250326",
+    "types-pyyaml>=6.0.12.20250402",
+    "types-requests>=2.32.0.20250328",
+    "types-tqdm>=4.67.0.20250417",
+    "yamllint>=1.37.1",
 ]
+
 notebook = [
     "ipykernel>=6.29.5",
     "jupyter>=1.1.1",
