@@ -9,7 +9,13 @@ repos:
             set -e
             repo_root=$(git rev-parse --show-toplevel)
             for file in "$@"; do
-              output=$(aspell --mode=tex --home-dir=${repo_root} --personal=${repo_root}/.aspell.en.pws list < "$file" | sort -u)
+              case "$file" in
+                *.tex) mode=tex ;;
+                *.md)  mode=markdown ;;
+                *.txt) mode=none ;;
+                *)     mode=none ;;
+              esac
+              output=$(aspell --mode="$mode" --home-dir=${repo_root} --personal=${repo_root}/.aspell.en.pws list < "$file" | sort -u)
               if [ -n "$output" ]; then
                 echo "$output"
                 exit 1
