@@ -1,10 +1,12 @@
----
 extends: default
 rules:
   line-length:
-    max: 130
-    level: warning
-  truthy:
+    max: 120 # with the below allows, this line length should be sufficient
+    level: warning # more permissive
+    allow-non-breakable-words: true # e.g., allow long sha hash
+    allow-non-breakable-inline-mappings: true # e.g., inline yaml
+  truthy: # require explicit true/false, no truthy 1/0, yes/no, on/off
     check-keys: false
   comments:
-    min-spaces-from-content: 2
+    min-spaces-from-content: 1 # both yamlfmt and prettier demand one space
+  document-start: disable # yamlfmt will strip the leading three dashes

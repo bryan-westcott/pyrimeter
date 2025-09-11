@@ -1,4 +1,3 @@
----
 # Pre-commit hooks supporting python, docker and latex
 
 # Note:
@@ -6,70 +5,139 @@
 #   uv run pre-commit install
 # If you change, run:
 #   uv run pre-commit clean && uv run pre-commit install --install-hooks
-
+#
 repos:
+  #
+  # ---------------------------------------------------------
   # update versions of pre-commit-hooks from pyproject.toml
+  # ---------------------------------------------------------
+  # As some projects need specific hook versions due to bugs/features
+  # the primary version is tracked in pyproject.toml.  This also allows
+  # other systems such as github actions to apply the same checks
+  # on the server side
+  # Note: pre-commit cannot reference another file, so the proper workflow
+  #       is to have the hooks update this file and then require those
+  #       changes to be submitted in order for pre-commit to succeed
+  # Note: these hooks will simply pass if no override version is provided
+  #       and the existing versions in this file will remain
+  # Note: to use these, place an entry in the pyproject.toml for each, as:
+  #   [tool.<toolname]
+  #   version = "X.Y.Z"
+  # for example
+  #   [tool.uv-pre-commit]
+  #   version = "0.5.27"
+  # othw
   - repo: local
     hooks:
+      #
+      # ---------------------------------------------------------
+      # prettier hook version update
+      # ---------------------------------------------------------
       - id: update-prettier-version-from-pyproject-toml
         name: update prettier version in pre-commit
         entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh prettier"
         language: script
         require_serial: true
+      #
+      # ---------------------------------------------------------
+      # shellcheck hook version update
+      # ---------------------------------------------------------
       - id: update-shellcheck-version-from-pyproject-toml
         name: update shellcheck version in pre-commit
         entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh shellcheck"
         language: script
         require_serial: true
+      #
+      # ---------------------------------------------------------
+      # docformatter hook version update
+      # ---------------------------------------------------------
       - id: update-docformatter-version-from-pyproject-toml
         name: update docformatter version in pre-commit
         entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh docformatter"
         language: script
         require_serial: true
+      #
+      # ---------------------------------------------------------
+      # ruff hook version update
+      # ---------------------------------------------------------
       - id: update-ruff-version-from-pyproject-toml
         name: update ruff version in pre-commit
         entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh ruff"
         language: script
         require_serial: true
+      #
+      # ---------------------------------------------------------
+      # mypy hook version update
+      # ---------------------------------------------------------
       - id: update-mypy-version-from-pyproject-toml
         name: update mypy version in pre-commit
         entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh mypy"
         language: script
         require_serial: true
+      #
+      # ---------------------------------------------------------
+      # hadolint hook version update
+      # ---------------------------------------------------------
       - id: update-hadolint-version-from-pyproject-toml
         name: update hadolint version in pre-commit
         entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh hadolint"
         language: script
         require_serial: true
+      #
+      # ---------------------------------------------------------
+      # action-validator hook version update
+      # ---------------------------------------------------------
       - id: update-action-validator-version-from-pyproject-toml
         name: update action-validator version in pre-commit
         entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh action-validator"
         language: script
         require_serial: true
+      #
+      # ---------------------------------------------------------
+      # yamllint hook version update
+      # ---------------------------------------------------------
       - id: update-yamllint-version-from-pyproject-toml
         name: update yamllint version in pre-commit
         entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh yamllint"
         language: script
         require_serial: true
+      #
+      # ---------------------------------------------------------
+      # uv-pre-commit hook version update
+      # ---------------------------------------------------------
       - id: update-uv-pre-commit-version-from-pyproject-toml
         name: update uv-pre-commit version in pre-commit
         entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh uv-pre-commit"
         language: script
         require_serial: true
-
+      #
+      # ---------------------------------------------------------
+      # yamlfmt hook version update
+      # ---------------------------------------------------------
+      - id: update-uv-pre-commit-version-from-pyproject-toml
+        name: update uv-pre-commit version in pre-commit
+        entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh yamlfmt"
+        language: script
+        require_serial: true
+  #
+  # ---------------------------------------------------------
   # basic checks (see here: https://pre-commit.com/hooks.html)
+  # ---------------------------------------------------------
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
       - id: check-yaml
-        args: [--allow-multiple-documents]
+        args:
+          - --allow-multiple-documents
       - id: check-json
       - id: check-toml
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: detect-private-key
-
+  #
+  # ---------------------------------------------------------
   # ruff - linting + formatting
+  # ---------------------------------------------------------
   # Note: ruff installed in pyproject dev group
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.9.2
@@ -80,8 +148,10 @@ repos:
       - id: ruff-format
         name: ruff-format
         language_version: python3.11
-
+  #
+  # ---------------------------------------------------------
   # mypy - lint-like type checking
+  # ---------------------------------------------------------
   # Note: mypy installed in pyproject dev group
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.14.1
@@ -90,28 +160,28 @@ repos:
         name: mypy
         language_version: python3.11
         additional_dependencies:
-          [
-            "matplotlib-stubs",
-            "pandas-stubs",
-            "ml-dtypes",
-            "types-Pillow",
-            "types-python-dateutil",
-            "types-pytz",
-            "types-PyYAML",
-            "types-requests",
-            "types-tqdm",
-            "boto3-stubs",
-            "mypy_boto3_s3",
-          ]
+          - matplotlib-stubs
+          - pandas-stubs
+          - ml-dtypes
+          - types-Pillow
+          - types-python-dateutil
+          - types-pytz
+          - types-PyYAML
+          - types-requests
+          - types-tqdm
+          - boto3-stubs
+          - mypy_boto3_s3
         types: [python]
-
+  #
+  # ---------------------------------------------------------
   # hadolint - check dockerfiles (run from docker itself)
-  # note: match anything named *ockerfile* in docker/ directory
-  # note: files is a regex so escale the / and * is not a wildcard
+  # ---------------------------------------------------------
+  # Note: match anything named *ockerfile* in docker/ directory
+  # Note: files is a regex so escale the / and * is not a wildcard
   #       but is "zero or more", and . is more of a wildcard
-  # note: you have to say a types of "file" or it will
+  # Note: you have to say a types of "file" or it will
   #       ignore non-standard named Dockerfiles
-  # note: this hook is EXTREMELY picky so be very careful when change
+  # Note: this hook is EXTREMELY picky so be very careful when change
   - repo: https://github.com/hadolint/hadolint
     rev: v2.12.0
     hooks:
@@ -122,8 +192,10 @@ repos:
         types: [file]
         entry: ghcr.io/hadolint/hadolint hadolint
         files: ^docker\/.*(d|D)ockerfile.*$
-
+  #
+  # ---------------------------------------------------------
   # prettier - formatting JS, CSS, JSON, Markdown, ...
+  # ---------------------------------------------------------
   # Note: v2.5.1 supports node v12 (ubuntu 22.04)
   # Note: install prettier tool with:
   #   sudo npm install --save-dev --save-exact prettier
@@ -135,10 +207,12 @@ repos:
     rev: v2.7.1
     hooks:
       - id: prettier
-        files: \.(md|json|toml|yml|yaml)$
+        files: \.(md|json|toml)$
         exclude: ^uv.lock
-
+  #
+  # ---------------------------------------------------------
   # docformatter - formats docstrings to follow PEP 257
+  # ---------------------------------------------------------
   # Note: docformatter requires version <4.0.0 until next release:
   #   https://github.com/PyCQA/docformatter/issues/293
   # Note: install docformatter in pyproject dev group
@@ -148,18 +222,18 @@ repos:
       - id: docformatter
         name: docformatter
         args:
-          [
-            -r,
-            -i,
-            --pre-summary-newline,
-            --make-summary-multi-line,
-            --wrap-summaries,
-            "88",
-            src,
-          ]
-
-  # check bash/shell scripts
-  # note: install shellcheck with:
+          - -r
+          - -i
+          - --pre-summary-newline
+          - --make-summary-multi-line
+          - --wrap-summaries
+          - "88"
+          - src
+  #
+  # ---------------------------------------------------------
+  # shellcheck - check bash/shell scripts
+  # ---------------------------------------------------------
+  # Note: install shellcheck with:
   #   sudo apt install shellcheck (0.8.0 for ubuntu 22.04)
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.10.0
@@ -167,9 +241,15 @@ repos:
       - id: shellcheck
         # Optional: Adjust severity level
         args: ["--severity=warning"]
-
-  # yamllint
-  # checks for valid yaml code
+  # yamlfmt
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.13.0 # pick a tagged release
+    hooks:
+      - id: yamlfmt
+  #
+  # ---------------------------------------------------------
+  # yamllint - check yaml files
+  # ---------------------------------------------------------
   # Note: see note above on inline comment fights with prettier
   #       although we could override the conflice by setting yamllint
   #       config to `comments: min-spaces-from-comment: 1`, this is
@@ -180,12 +260,16 @@ repos:
     hooks:
       - id: yamllint
         # Optional: Use custom yamllint config file
-        args: [--strict, -c=.yamllint]
-
-  # check github actions yaml
-  # note: install action-validator with:
+        args:
+          - --strict
+          - --config-file=.yamllint
+  #
+  # ---------------------------------------------------------
+  # action-validator - check github actions yaml
+  # ---------------------------------------------------------
+  # Note: install action-validator with:
   #   sudo npm install -g @action-validator/core @action-validator/cli --save-dev
-  # note: checks workflows only, not actions
+  # Note: checks workflows only, not actions
   - repo: https://github.com/mpalmer/action-validator
     rev: v0.5.4
     hooks:
@@ -195,14 +279,18 @@ repos:
         entry: action-validator
         language: rust
         files: '.github/workflows/.*\.ya?ml'
-
-  # ensure lock file is up to date
+  #
+  # ---------------------------------------------------------
+  # uv-pre-commit - ensure lock file is up to date
+  # ---------------------------------------------------------
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.5.27
     hooks:
       - id: uv-lock
-
-  # common latex checks
+  #
+  # ---------------------------------------------------------
+  # pre-commit-latex-hooks - common latex checks
+  # ---------------------------------------------------------
   - repo: https://github.com/jonasbb/pre-commit-latex-hooks
     rev: v1.4.0
     hooks:
@@ -223,8 +311,10 @@ repos:
       - id: tilde-cite
       - id: unique-labels
       - id: cleveref-instead-of-autoref
-
-  # spell checker using LOCAL aspell
+  #
+  # ---------------------------------------------------------
+  # aspell (local) - spell checker using LOCAL aspell
+  # ---------------------------------------------------------
   - repo: local
     hooks:
       - id: aspell-check
@@ -232,7 +322,7 @@ repos:
         description: Spell-check tex/md/txt files and fail on unknown words, use repo root dictionary, ingoring template files
         language: system
         files: (?<!\.template)\.(tex|md|txt)$
-        entry: >
+        entry: |-
           bash -c '
             set -e
             repo_root=$(git rev-parse --show-toplevel)
@@ -243,21 +333,32 @@ repos:
                 *.txt) mode=none ;;
                 *)     mode=none ;;
               esac
-              output=$(aspell --mode="$mode" --home-dir=${repo_root} --personal=${repo_root}/.aspell.en.pws list < "$file" | sort -u)
+              output=$(
+                aspell \
+                  --mode="$mode" \
+                  --home-dir=${repo_root} \
+                  --personal=${repo_root}/.aspell.en.pws \
+                  list < "$file" |
+                sort -u
+              )
               if [ -n "$output" ]; then
                 echo "$output"
                 exit 1
               fi
             done
           ' --
-
-      # check prose with LOCAL proselint
+  #
+  # ---------------------------------------------------------
+  # proselint (local) - check prose with LOCAL proselint
+  # ---------------------------------------------------------
+  - repo: local
+    hooks:
       - id: proselint-local
         name: Proselint (local proselint install)
         description: Grammar and style checker for tex/md/txt using your local proselint config in repo root, ignoring template files
         language: system
         files: (?<!\.template)\.(tex|md|txt)$
-        entry: >
+        entry: |-
           bash -c '
             set -e
             repo_root=$(git rev-parse --show-toplevel)
@@ -265,14 +366,18 @@ repos:
               PROSELINT_CONFIG="$repo_root/.proselintrc.json" proselint "$file"
             done
           ' --
-
-      # custom scrit to compile with latexmk
+  #
+  # ---------------------------------------------------------
+  # latexmk (local) - custom script to compile latex with latexmk
+  # ---------------------------------------------------------
+  - repo: local
+    hooks:
       - id: latexmk-compile
         name: LaTeX compile with latexmk and biber (custom script)
         description: Compile LaTeX using latexmk with biber, fail on error, ignore .template.tex files
         language: system
         files: (?<!\.template)\.tex$
-        entry: >
+        entry: |-
           bash -c '
             set -e
             repo_root=$(git rev-parse --show-toplevel)
@@ -282,14 +387,19 @@ repos:
               latexmk -pdf -interaction=nonstopmode "$file"
             done
           ' --
-
-      # custom script to convert mardown to pdf via pandoc/xelatex when template exists
+  #
+  # ---------------------------------------------------------
+  # pandoc/xelatex (local) - custom script to convert markdown to pdf
+  # ---------------------------------------------------------
+  # Note: requires associated template to trigger
+  - repo: local
+    hooks:
       - id: pandoc-md-to-pdf
         name: Pandoc Markdown to PDF (custom script)
         description: Convert markdown (<file>.md) to PDF (<file>.pdf) using Pandoc+XeLaTex when template (<file>.template.tex) exists
         language: system
         files: \.md$
-        entry: >
+        entry: |-
           bash -c '
             for file in "$@"; do
               base="${file%.md}"
