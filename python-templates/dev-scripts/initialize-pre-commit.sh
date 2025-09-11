@@ -35,6 +35,9 @@ source $HOME/.bashrc
 # Install rust toolchain
 rustup toolchain install stable
 
+# Install golang for yamlfmt
+sudo apt install golang
+
 # install pre-commit and hooks
 # Newer versions of pre-commit will break mypy hook
 uv add --dev pre-commit==2.17
