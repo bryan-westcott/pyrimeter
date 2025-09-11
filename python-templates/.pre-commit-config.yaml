@@ -319,7 +319,9 @@ repos:
     hooks:
       - id: aspell-check
         name: Aspell Spell Checker (local aspell install)
-        description: Spell-check tex/md/txt files and fail on unknown words, use repo root dictionary, ingoring template files
+        description: |-
+           Spell-check tex/md/txt files and fail on unknown words, use repo
+           root dictionary, ingoring template files
         language: system
         files: (?<!\.template)\.(tex|md|txt)$
         entry: |-
@@ -355,7 +357,9 @@ repos:
     hooks:
       - id: proselint-local
         name: Proselint (local proselint install)
-        description: Grammar and style checker for tex/md/txt using your local proselint config in repo root, ignoring template files
+        description: |-
+          Grammar and style checker for tex/md/txt using your local
+          proselint config in repo root, ignoring template files
         language: system
         files: (?<!\.template)\.(tex|md|txt)$
         entry: |-
@@ -396,7 +400,9 @@ repos:
     hooks:
       - id: pandoc-md-to-pdf
         name: Pandoc Markdown to PDF (custom script)
-        description: Convert markdown (<file>.md) to PDF (<file>.pdf) using Pandoc+XeLaTex when template (<file>.template.tex) exists
+        description: |-
+          Convert markdown (<file>.md) to PDF (<file>.pdf) using
+          Pandoc+XeLaTex when template (<file>.template.tex) exists
         language: system
         files: \.md$
         entry: |-
