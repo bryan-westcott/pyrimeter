@@ -18,13 +18,33 @@
   exit 1
 }
 
-# Note: this has to be a function to better trap error in the dev script itself
+# Note: this has to be a subshell better trap error in the dev script itself
 dev_init() {
+  
+  # Save current options
+  local old_opts
+  old_opts=$(set +o)
+  # Always restore options when this function exits
+  trap 'eval "$old_opts"; trap - ERR; trap - EXIT' EXIT
 
-  # trap errors (assume sourced)
+  # Set temp options
+  # -u (nounset): treat unset variables as an error
+  #   Example: echo "$FOO" when FOO is not set → causes immediate failure
+  #   Helps catch typos and missing env vars early.
+  set -u
+  # -o pipefail: makes a pipeline fail if *any* command in it fails
+  #   Default in Bash: only the *last* command in a pipeline matters.
+  #   Example:
+  #     false | true
+  #   Without pipefail → exit code 0 (because 'true' succeeded).
+  #   With pipefail   → exit code 1 (because 'false' failed).
+  #
+  #   This is useful when chaining commands with | where every stage matters.
+  set -o pipefail
+  
+  # trap errors (assume sourced) to indicate dev-init problems
+  # Note: trap persist until function succeeds and runs bottom "trap - ERR"
   trap 'echo "❌ Error in dev-init.sh at line $LINENO"; return 1' ERR
-  trap 'trap - ERR' EXIT   # always clear ERR trap when function exits
-  set -euo pipefail
   
   # Resolve directory of this script, then its parent (the project root)
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -115,6 +135,12 @@ dev_init() {
   fi
   
   echo "✅ Dev environment ready"
+
+    # Explicitly clear traps on success (EXIT will also run, but this makes it obvious)
+  trap - ERR
+  trap - EXIT
+  eval "$old_opts"
+  
 }
 
 dev_init "$@"
