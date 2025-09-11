@@ -4,12 +4,12 @@
 # 1. check if sourcing
 # 2. create project venv (if not exist)
 # 3. activate venv (and check that VIRTUAL_ENV var is set)
-# 4. sync dev/notebook dependencies 
+# 4. sync dev/notebook dependencies
 # 5. install current project as an editable package
 # 6. register environment as jupyter kernel
 
-# trap errors
-trap 'echo "❌ Error on line $LINENO"; (return 1 2>/dev/null) || exit 1' ERR
+# This script must be sourced, so these checks are invalid
+# shellcheck disable=SC2317,SC1091
 
 # Ensure script is sourced, not executed
 (return 0 2>/dev/null) || {
@@ -18,10 +18,35 @@ trap 'echo "❌ Error on line $LINENO"; (return 1 2>/dev/null) || exit 1' ERR
   exit 1
 }
 
+# trap errors (assume sourced)
+trap 'echo "❌ Error on line $LINENO"; (return 1 2>/dev/null) || return 1' ERR
+
 # Resolve directory of this script, then its parent (the project root)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-cd "$PROJECT_ROOT"
+cd "$PROJECT_ROOT" || {
+  echo "Error: could not cd to $PROJECT_ROOT" >&2
+  return 1 2>/dev/null || true
+}
+
+# Check for pyproject.toml
+PYPROJECT_FILE="${PROJECT_ROOT?}/pyproject.toml"
+if [ ! -f "$PYPROJECT_FILE" ]; then
+  echo "❌ No pyproject.toml found in $PROJECT_ROOT, expected a minimal skeleton" >&2
+  { return 1 2>/dev/null; } || exit 1
+fi
+
+# extract project name (first match of `name = "..."`)
+PROJECT_NAME="$(grep -m1 '^[[:space:]]*name[[:space:]]*=' "$PYPROJECT_FILE" \
+    | sed -E 's/.*name[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/')"
+
+# check if notebook section in pyproject.toml
+if grep -q '^[[:space:]]*notebook:' "$PYPROJECT_FILE"; then
+  HAS_NOTEBOOK=1
+else
+  echo "ℹ️  No 'notebook' group found in $PYPROJECT_FILE; skipping Jupyter setup."
+  HAS_NOTEBOOK=0
+fi
 
 echo "📦 Creating virtual environment with uv..."
 uv venv
@@ -33,34 +58,56 @@ if ! source .venv/bin/activate; then
 fi
 echo "VIRTUAL_ENV=${VIRTUAL_ENV?}"
 
-echo "📋 Syncing dependencies from pyproject.toml..."
-if ! uv sync --dev --group notebook; then
-  echo "❌ Failed to sync dependencies"
-  return 1 2>/dev/null || exit 1
+
+#echo "📋 Syncing dependencies from pyproject.toml..."
+if [ "$HAS_NOTEBOOK" -ne 1 ]; then
+  echo "📋 Syncing base dev dependencies (no notebook)..."
+  if ! uv sync --dev; then
+    echo "❌ Failed to sync base dev dependencies" >&2
+    { return 1 2>/dev/null; } || exit 1
+  fi
+else
+  echo "📋 Syncing dev and notebook dependencies..."
+  if ! uv sync --dev --group notebook; then
+    echo "❌ Failed to sync notebook dependencies" >&2
+    { return 1 2>/dev/null; } || exit 1
+  fi
 fi
 
-echo "🔧 Installing project in editable mode..."
-if ! uv pip install -e .; then
-  echo "❌ Failed to install editable project"
-  return 1 2>/dev/null || exit 1
+# install editable python code, but only if src/<name> exists
+if [ -n "$PROJECT_NAME" ] && [ -d "$PROJECT_ROOT/src/$PROJECT_NAME" ]; then
+  echo "🔧 Installing project in editable mode..."
+  if ! uv pip install -e .; then
+    echo "❌ Failed to install editable project" >&2
+    { return 1 2>/dev/null; } || exit 1
+  fi
+else
+  echo "ℹ️  No src/$PROJECT_NAME directory found; skipping editable install."
 fi
 
-echo "🧹 Removing default 'python3' kernel if present..."
-jupyter kernelspec remove -y python3 || true
+# register jupyter kernel, but only if notebook in pyproject.toml
+if [ "$HAS_NOTEBOOK" -eq 1 ]; then
+  echo "🧹 Removing default 'python3' kernel if present..."
+  jupyter kernelspec remove -y python3 || true
 
-KERNEL_NAME="$(basename "$PROJECT_ROOT")"
-echo "🧠 Registering Jupyter kernel: ${KERNEL_NAME?}..."
-if ! uv run ipython kernel install \
-  --user \
-  --env VIRTUAL_ENV "$PROJECT_ROOT/.venv" \
-  --name "${KERNEL_NAME?}" \
-  --display-name "${KERNEL_NAME?}"; then
-  echo "❌ Kernel registration failed — possibly missing ipykernel or misconfigured .venv"
-  echo "   Try: uv sync --dev --group notebook"
-  (return 1 2>/dev/null) || true  # Prevent terminal exit if sourced
+  KERNEL_NAME="$(basename "$PROJECT_ROOT")"
+  echo "🧠 Registering Jupyter kernel: ${KERNEL_NAME?}..."
+  if ! uv run ipython kernel install \
+        --user \
+        --env VIRTUAL_ENV "$PROJECT_ROOT/.venv" \
+        --name "${KERNEL_NAME?}" \
+        --display-name "${KERNEL_NAME?}"
+  then
+    echo "❌ Kernel registration failed — possibly missing ipykernel or misconfigured .venv" >&2
+    echo "   Try: uv sync --dev --group notebook" >&2
+    { return 1 2>/dev/null; } || true  # prevent killing ssh if sourced
+  fi
+  echo "Launch Jupyter with:"
+  echo "  uv run --with notebook jupyter lab"
+  echo "and select '${KERNEL_NAME?}' kernel"
+else
+  echo "ℹ️  No notebook group detected — no kernel to add or register."
 fi
 
-echo "✅ Dev environment ready, launch with:"
-echo "uv run --with notebook jupyter lab"
-echo "and select ${KERNEL_NAME?} kernel"
 
+echo "✅ Dev environment ready"
