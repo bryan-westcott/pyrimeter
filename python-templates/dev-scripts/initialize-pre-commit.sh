@@ -38,10 +38,10 @@ rustup toolchain install stable
 # Install golang for yamlfmt
 sudo apt install golang
 
-# install pre-commit and hooks
+# install pre-commit and hooks as a uv tool (avoid need for uv run)
 # Newer versions of pre-commit will break mypy hook
-uv add --dev pre-commit==2.17
+uv tool install "pre-commit==2.17" --with pre-commit-uv
 pre-commit clean && pre-commit install --install-hooks
 
 # test run
-uv run pre-commit run -a
+pre-commit run -a
