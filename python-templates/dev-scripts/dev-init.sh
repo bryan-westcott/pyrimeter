@@ -66,7 +66,7 @@ dev_init() {
       | sed -E 's/.*name[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/')"
   
   # check if notebook section in pyproject.toml
-  if grep -q '^[[:space:]]*notebook:' "$PYPROJECT_FILE"; then
+  if grep -q '^[[:space:]]*notebook[[:space:]]*=' "$PYPROJECT_FILE"; then
     HAS_NOTEBOOK=1
   else
     echo "ℹ️  No 'notebook' group found in $PYPROJECT_FILE; skipping Jupyter setup."
