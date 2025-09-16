@@ -127,6 +127,7 @@ dev_init() {
       echo "   Try: uv sync --dev --group notebook" >&2
       { return 1 2>/dev/null; } || true  # prevent killing ssh if sourced
     fi
+    echo "Note: kernels persist outside of uv in '~/.local/share/jupyter/kernels/'"
     echo "Launch Jupyter with:"
     echo "  uv run --with notebook jupyter lab"
     echo "and select '${KERNEL_NAME?}' kernel"
