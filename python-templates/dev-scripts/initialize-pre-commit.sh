@@ -40,7 +40,7 @@ sudo apt install golang
 
 # install pre-commit and hooks as a uv tool (avoid need for uv run)
 # Newer versions of pre-commit will break mypy hook
-uv tool install "pre-commit==2.17" --with pre-commit-uv
+uv tool install "pre-commit==4.3.0" --with pre-commit-uv
 pre-commit clean && pre-commit install --install-hooks
 
 # test run

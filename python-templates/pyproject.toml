@@ -1,8 +1,8 @@
-# These are boilerplate standard configuration options including development 
+# These are boilerplate standard configuration options including development
 # tools, notebooks and popular linters/formatters/type-checkers
 
 [project]
-name = "<project name here>"
+name = "test"
 description = "<project description here>"
 requires-python = "==3.11.*"
 readme = "README.md"
@@ -14,13 +14,12 @@ dependencies = [
 [dependency-groups]
 dev = [
     "boto3-stubs>=1.38.10",
-    "docformatter>=1.7.5",
+    "docformatter>=1.7.7",  # <=1.76 incompatible with pre-commit 4.0+
     "matplotlib-stubs>=0.1.0",
     "ml-dtypes>=0.5.1",
     "mypy>=1.15.0",
     "mypy-boto3-s3>=1.38.0",
     "pandas-stubs>=2.2.3.250308",
-    "pre-commit==2.17",  # newer versions broken
     "ruff>=0.11.8",
     "types-pillow>=10.2.0.20240822",
     "types-python-dateutil>=2.9.0.20241206",
@@ -229,20 +228,22 @@ docstring-code-line-length = "dynamic"
 convention = "pep257"
 
 [tool.shellcheck]
-version = "0.10.0"
+version = "0.11.0"
 
 [tool.prettier]
 # only version<3 supported by ubuntu 22.04
 # only version<=2.7.1 supported by
 #   https://github.com/pre-commit/mirrors-prettier/
-version = "2.7.1"
+version = "4.0.0-alpha8"
 
 [tool.hadolint]
 version = "2.12.0"
 
 [tool.action-validator]
-version = "0.5.4"
+version = "0.8.0"
 
 [tool.uv-pre-commit]
-version = "0.5.27"
+version = "0.8.22"
 
+[tools.yamlfmt]
+version = "0.17.2"
