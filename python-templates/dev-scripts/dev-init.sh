@@ -20,7 +20,7 @@
 
 # Note: this has to be a subshell better trap error in the dev script itself
 dev_init() {
-  
+
   # Save current options
   local old_opts
   old_opts=$(set +o)
@@ -41,11 +41,11 @@ dev_init() {
   #
   #   This is useful when chaining commands with | where every stage matters.
   set -o pipefail
-  
+
   # trap errors (assume sourced) to indicate dev-init problems
   # Note: trap persist until function succeeds and runs bottom "trap - ERR"
   trap 'echo "❌ Error in dev-init.sh at line $LINENO"; return 1' ERR
-  
+
   # Resolve directory of this script, then its parent (the project root)
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -53,18 +53,18 @@ dev_init() {
     echo "Error: could not cd to $PROJECT_ROOT" >&2
     return 1 2>/dev/null || true
   }
-  
+
   # Check for pyproject.toml
   PYPROJECT_FILE="${PROJECT_ROOT?}/pyproject.toml"
   if [ ! -f "$PYPROJECT_FILE" ]; then
     echo "❌ No pyproject.toml found in $PROJECT_ROOT, expected a minimal skeleton" >&2
     { return 1 2>/dev/null; } || exit 1
   fi
-  
+
   # extract project name (first match of `name = "..."`)
   PROJECT_NAME="$(grep -m1 '^[[:space:]]*name[[:space:]]*=' "$PYPROJECT_FILE" \
       | sed -E 's/.*name[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/')"
-  
+
   # check if notebook section in pyproject.toml
   if grep -q '^[[:space:]]*notebook[[:space:]]*=' "$PYPROJECT_FILE"; then
     HAS_NOTEBOOK=1
@@ -72,18 +72,18 @@ dev_init() {
     echo "ℹ️  No 'notebook' group found in $PYPROJECT_FILE; skipping Jupyter setup."
     HAS_NOTEBOOK=0
   fi
-  
+
   echo "📦 Creating virtual environment with uv..."
   uv venv
-  
+
   echo "🔗 Activating virtual environment..."
   if ! source .venv/bin/activate; then
     echo "❌ Failed to activate .venv"
     return 1 2>/dev/null || exit 1
   fi
   echo "VIRTUAL_ENV=${VIRTUAL_ENV?}"
-  
-  
+
+
   #echo "📋 Syncing dependencies from pyproject.toml..."
   if [ "$HAS_NOTEBOOK" -ne 1 ]; then
     echo "📋 Syncing base dev dependencies (no notebook)..."
@@ -98,7 +98,7 @@ dev_init() {
       { return 1 2>/dev/null; } || exit 1
     fi
   fi
-  
+
   # install editable python code, but only if src/<name> exists
   if [ -n "$PROJECT_NAME" ] && [ -d "$PROJECT_ROOT/src/$PROJECT_NAME" ]; then
     echo "🔧 Installing project in editable mode..."
@@ -109,12 +109,12 @@ dev_init() {
   else
     echo "ℹ️  No src/$PROJECT_NAME directory found; skipping editable install."
   fi
-  
+
   # register jupyter kernel, but only if notebook in pyproject.toml
   if [ "$HAS_NOTEBOOK" -eq 1 ]; then
-    echo "🧹 Removing default 'python3' kernel if present..."
-    jupyter kernelspec remove -y python3 || true
-  
+    #echo "🧹 Removing default 'python3' kernel if present..."
+    #jupyter kernelspec remove -y python3 || true
+
     KERNEL_NAME="$(basename "$PROJECT_ROOT")"
     echo "🧠 Registering Jupyter kernel: ${KERNEL_NAME?}..."
     if ! uv run ipython kernel install \
@@ -134,15 +134,14 @@ dev_init() {
   else
     echo "ℹ️  No notebook group detected — no kernel to add or register."
   fi
-  
+
   echo "✅ Dev environment ready"
 
     # Explicitly clear traps on success (EXIT will also run, but this makes it obvious)
   trap - ERR
   trap - EXIT
   eval "$old_opts"
-  
+
 }
 
 dev_init "$@"
-
