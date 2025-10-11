@@ -293,6 +293,8 @@ repos:
   # ---------------------------------------------------------
   # pre-commit-latex-hooks - common latex checks
   # ---------------------------------------------------------
+  # Note: to update dictionary use aspell interactive: aspell check <file>
+  #       or spell-check-file.sh (dev-scripts) which will select mode
   - repo: https://github.com/jonasbb/pre-commit-latex-hooks
     rev: v1.5.0
     hooks:
