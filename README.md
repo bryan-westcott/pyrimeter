@@ -73,3 +73,7 @@ A modern Python project starter template featuring robust linting, pre-commit au
   - pre-commit will self-check its versions
 - Sane default config for tools
 - Tooling, test and notebook support built into `pyproject.toml`
+
+## License
+
+Apache 2.0, see LICENSE and NOTICE
