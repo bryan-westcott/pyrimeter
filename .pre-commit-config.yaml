@@ -143,10 +143,10 @@ repos:
     hooks:
       - id: ruff
         name: ruff
-        language_version: python3.11
+        language_version: python3.<PYTHON_MINOR_VERSION>
       - id: ruff-format
         name: ruff-format
-        language_version: python3.11
+        language_version: python3.<PYTHON_MINOR_VERSION>
   #
   # ---------------------------------------------------------
   # mypy - lint-like type checking
@@ -157,7 +157,7 @@ repos:
     hooks:
       - id: mypy
         name: mypy
-        language_version: python3.11
+        language_version: python3.<PYTHON_MINOR_VERSION>
         additional_dependencies:
           - matplotlib-stubs
           - pandas-stubs

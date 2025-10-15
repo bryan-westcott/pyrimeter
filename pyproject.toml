@@ -2,9 +2,9 @@
 # tools, notebooks and popular linters/formatters/type-checkers
 
 [project]
-name = "test"
-description = "<project description here>"
-requires-python = "==3.11.*"
+name = "<PROJECT_NAME>"
+description = "<PROJECT_DESCRIPTION>"
+requires-python = "==3.<PYTHON_MINOR_VERSION>.*"
 readme = "README.md"
 version = "0.0.1"
 dependencies = [
@@ -82,7 +82,7 @@ package-dir = {"" = "src"}
 
 [tool.black]
 line-length = 88
-target-version = ["py311"]
+target-version = ["py3<PYTHON_MINOR_VERSION>"]
 include = '''
 (
   src/
@@ -181,7 +181,7 @@ extend-exclude = ["*.ipynb"]
 line-length = 120
 indent-width = 4
 # Assume Python version, default is 3.8
-target-version = "py311"
+target-version = "py3<PYTHON_MINOR_VERSION>"
 
 [tool.ruff.lint]
 select = ["ALL"]
