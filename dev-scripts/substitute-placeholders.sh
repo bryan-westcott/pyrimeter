@@ -23,7 +23,7 @@ _main() {
 
 
   # --- cuda version ---
-  
+
   # Detect CUDA version from nvidia-smi (banner), or warn if unavailable
   if command -v nvidia-smi >/dev/null 2>&1; then
     CUDA_VERSION=$(nvidia-smi | grep -oE 'CUDA Version: [0-9.]+' | head -n1 | awk '{print $3}')
@@ -36,7 +36,7 @@ _main() {
   else
     echo "WARNING: nvidia-smi not found; cannot auto-detect CUDA version."
   fi
-  
+
   # Prompt for CUDA major/minor, defaulting to detected values if present
   while :; do
     read -rp "CUDA_MAJOR_VERSION [${CUDA_MAJOR_VERSION:-}]: " _in
@@ -44,7 +44,7 @@ _main() {
     [[ "$CUDA_MAJOR_VERSION" =~ ^[0-9]+$ ]] && break
     echo "Please enter a numeric major version (e.g., 12)."
   done
-  
+
   while :; do
     read -rp "CUDA_MINOR_VERSION [${CUDA_MINOR_VERSION:-0}]: " _in
     CUDA_MINOR_VERSION="${_in:-${CUDA_MINOR_VERSION:-0}}"
@@ -65,41 +65,45 @@ echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
   CUDA_MAJOR_E=$(escape "$CUDA_MAJOR_VERSION")
   CUDA_MINOR_E=$(escape "$CUDA_MINOR_VERSION")
 
-  # --- files to edit in place ---
-  # Option A: pass files as args to the script
-  # Option B: hardcode the list here:
-  # FILES=("pyproject.template.toml" "README.template.md")
+  # --- files to process (prefer args; else auto-detect base.*) ---
+
+  # Note: will find all files with a base. prefix
   local -a FILES
   if (( "$#" > 0 )); then
     FILES=("$@")
   else
-    # Edit here if you prefer a fixed list:
-    FILES=("pyproject.toml" ".pre-commit-config.yaml")
+    shopt -s nullglob dotglob
+    FILES=( base.* )
+    shopt -u nullglob dotglob
   fi
 
-  # --- robust in-place edit (portable across GNU/BSD sed) ---
-  inplace_sed() {
-    local f="$1" tmp
-    tmp="${f}.tmp.$$"
+
+  # --- out-of-place edit: read $src, write to $dst (src with ".base." removed) ---
+  outplace_sed() {
+    local src="$1" dst="$2" tmp
+    tmp="${dst}.tmp.$$"
     sed -e "s/<PYTHON_MINOR_VERSION>/${PY_MINOR_E}/g" \
         -e "s/<PROJECT_NAME>/${NAME_E}/g" \
         -e "s/<PROJECT_DESCRIPTION>/${DESC_E}/g" \
         -e "s/<CUDA_MAJOR_VERSION>/${CUDA_MAJOR_E}/g" \
         -e "s/<CUDA_MINOR_VERSION>/${CUDA_MINOR_E}/g" \
-        "$f" > "$tmp"
-    mv "$tmp" "$f"
+        "$src" > "$tmp"
+    # atomic changes
+    mv "$tmp" "$dst"
   }
 
   # --- process each file ---
-  for f in "${FILES[@]}"; do
-    [[ -f "$f" ]] || { echo "Skip (not found): $f" >&2; continue; }
-    inplace_sed "$f"
+  for src in "${FILES[@]}"; do
+    [[ -f "$src" ]] || { echo "Skip (not found): $src" >&2; continue; }
+    # destination has no base. prefix
+    dst="${src#base.}"
+    outplace_sed "$src" "$dst"
     # assert no placeholders remain
-    if grep -Eq '<[A-Z_]+>' "$f"; then
-      echo "ERROR: Placeholder(s) remain in $f" >&2
+    if grep -Eq '<[A-Z_]+>' "$dst"; then
+      echo "ERROR: Placeholder(s) remain in $dst" >&2
       return 1
     fi
-    echo "Updated: $f"
+    echo "Updated: $src -> $dst"
   done
 
   # --- make a placeholder directory ---
