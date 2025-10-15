@@ -19,5 +19,4 @@ esac
 aspell --mode="$mode" \
        --home-dir="$repo_root" \
        --personal="$repo_root/.aspell.en.pws" \
-       check "$file" 
-
+       check "$file"
