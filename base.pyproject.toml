@@ -52,6 +52,7 @@ tooling = [
   "ruff>=0.14.0",
   "mypy>=1.15.0",
   "docformatter>=1.7.7",  # <=1.76 incompatible with pre-commit 4.0+
+  "taplo>=0.9.3",  # for toml
   # stubs only below, will not install underlying package
   "boto3-stubs>=1.38.10",
   "matplotlib-stubs>=0.1.0",
@@ -322,6 +323,3 @@ version = "0.9.3"
 
 [tools.yamlfmt]
 version = "0.18.0"
-
-[tools.taplo]
-version = "0.9.3"
