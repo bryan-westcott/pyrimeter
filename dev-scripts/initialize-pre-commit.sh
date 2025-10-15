@@ -86,7 +86,7 @@ initialize_pre_commit() {
   uv run pre-commit clean && uv run pre-commit install --install-hooks
 
   # test run
-  pre-commit run -a
+  uv run pre-commit run -a
 
   echo "✅ Pre-commit ready"
   # Note: trap will restore old opts and history recording
