@@ -117,7 +117,7 @@ force-exclude = '''
 '''
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.<PYTHON_MINOR_VERSION>"
 # exclude packages without typehints
 follow_imports = "skip"
 files = ["src/"]
