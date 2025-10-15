@@ -1,4 +1,5 @@
 # Pre-commit hooks supporting python, docker and latex
+# 
 # Note:
 # To use this run:
 #   uv run pre-commit install
@@ -268,7 +269,7 @@ repos:
   #       asking for trouble with github actions, so best to just
   #       use comments before the line, not inline for now
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.37.0
+    rev: v1.37.1
     hooks:
       - id: yamllint
         # Optional: Use custom yamllint config file
