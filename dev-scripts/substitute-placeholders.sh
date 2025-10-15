@@ -21,10 +21,49 @@ _main() {
   read -rp "Project name: " PROJECT_NAME; [[ -n "$PROJECT_NAME" ]] || { echo "Required" >&2; return 1; }
   read -rp "Project description: " PROJECT_DESCRIPTION; [[ -n "$PROJECT_DESCRIPTION" ]] || { echo "Required" >&2; return 1; }
 
+
+  # --- cuda version ---
+  
+  # Detect CUDA version from nvidia-smi (banner), or warn if unavailable
+  if command -v nvidia-smi >/dev/null 2>&1; then
+    CUDA_VERSION=$(nvidia-smi | grep -oE 'CUDA Version: [0-9.]+' | head -n1 | awk '{print $3}')
+    if [ -n "$CUDA_VERSION" ]; then
+      echo "CUDA_VERSION=${CUDA_VERSION}"
+      IFS=. read -r CUDA_MAJOR_VERSION CUDA_MINOR_VERSION _ <<<"$CUDA_VERSION"
+    else
+      echo "WARNING: Could not parse CUDA Version from nvidia-smi banner."
+    fi
+  else
+    echo "WARNING: nvidia-smi not found; cannot auto-detect CUDA version."
+  fi
+  
+  # Prompt for CUDA major/minor, defaulting to detected values if present
+  while :; do
+    read -rp "CUDA_MAJOR_VERSION [${CUDA_MAJOR_VERSION:-}]: " _in
+    CUDA_MAJOR_VERSION="${_in:-${CUDA_MAJOR_VERSION:-}}"
+    [[ "$CUDA_MAJOR_VERSION" =~ ^[0-9]+$ ]] && break
+    echo "Please enter a numeric major version (e.g., 12)."
+  done
+  
+  while :; do
+    read -rp "CUDA_MINOR_VERSION [${CUDA_MINOR_VERSION:-0}]: " _in
+    CUDA_MINOR_VERSION="${_in:-${CUDA_MINOR_VERSION:-0}}"
+    [[ "$CUDA_MINOR_VERSION" =~ ^[0-9]+$ ]] && break
+    echo "Please enter a numeric minor version (e.g., 4)."
+  done
+
+echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
+# Optionally export:
+# export CUDA_MAJOR_VERSION CUDA_MINOR_VERSION
+#
   # --- escape for sed ---
   escape() { printf '%s' "$1" | sed -e 's/[\/&]/\\&/g'; }
-  local PY_MINOR_E NAME_E DESC_E
-  PY_MINOR_E=$(escape "$PY_MINOR"); NAME_E=$(escape "$PROJECT_NAME"); DESC_E=$(escape "$PROJECT_DESCRIPTION")
+  local PY_MINOR_E NAME_E DESC_E CUDA_MAJOR_E CUDA_MINOR_E
+  PY_MINOR_E=$(escape "$PY_MINOR")
+  NAME_E=$(escape "$PROJECT_NAME")
+  DESC_E=$(escape "$PROJECT_DESCRIPTION")
+  CUDA_MAJOR_E=$(escape "$CUDA_MAJOR_VERSION")
+  CUDA_MINOR_E=$(escape "$CUDA_MINOR_VERSION")
 
   # --- files to edit in place ---
   # Option A: pass files as args to the script
@@ -45,6 +84,8 @@ _main() {
     sed -e "s/<PYTHON_MINOR_VERSION>/${PY_MINOR_E}/g" \
         -e "s/<PROJECT_NAME>/${NAME_E}/g" \
         -e "s/<PROJECT_DESCRIPTION>/${DESC_E}/g" \
+        -e "s/<CUDA_MAJOR_VERSION>/${CUDA_MAJOR_E}/g" \
+        -e "s/<CUDA_MINOR_VERSION>/${CUDA_MINOR_E}/g" \
         "$f" > "$tmp"
     mv "$tmp" "$f"
   }
