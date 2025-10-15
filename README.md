@@ -1,33 +1,75 @@
-Bolierplate template for a python project with UV and pre-commit linting
+# pyproj-template
 
-- Quick start:
-  - run once: `./dev-scripts/initialize-pre-commit.sh`
-  - fill in placeholders in pyproject.toml
-  - source (not run): `source dev-scripts/dev-init.sh`
-  - place modules in `src/<project_name>/`
-  - launch jupyter and select project kernel
+A modern Python project starter template featuring robust linting, pre-commit automation, and uv-based tooling.
 
-- To prep variables:
+## Quick start:
 
-```bash
-    SOURCE_DIR=$(pwd)
-    UV_CACHE_DIR="$HOME/.cache/uv"
-    UV_PROJECT_ENVIRONMENT="${SOURCE_DIR?}/venv"
-    UV_SYNC_MODE="locked"
-    UV_LINK_MODE="copy"
+1. ## **Initialize pre-commit** (idempotent):
+   ```bash
+   ./dev-scripts/initialize-pre-commit.sh
+   ```
+2. ## **Activate the development environment** (_source don't run_)
 
-    UV_COMMAND="uv --project ${SOURCE_DIR?}"
-    UV_SYNC_COMMAND="${UV_COMMAND?} sync --${UV_SYNC_MODE?}"
-    # Note: UV venv will ignore UV_PROJECT_ENVIRONEMNT unless you explicitly add it to the end of UV_VENV_COMMAND
-    UV_VENV_COMMAND="${UV_COMMAND?} venv --link-mode ${UV_LINK_MODE?} --relocatable ${UV_PROJECT_ENVIRONMENT?}"
-```
+   ```bash
+   source dev-scripts/dev-init.sh
+   ```
 
-- To create UV venv:
-  - `${UV_VENV_COMMAND?} ${UV_PROJECT_ENVIRONMENT?}`
-- To activate:
-  - `source ${UV_PROJECT_ENVIRONMENT?}/bin/activate`
-  - you MUST use SOURCE
-- To sync:
-  - `$UV_SYNC_COMMAND?} --group dev --group notebook`
-- To deactivate:
-  - `deactivate`
+   - Creates the virtual environment (venv), if needed
+   - Synchronized dependencies (safely)
+   - Registers the environment as a jupyter kernel
+   - Activates the environment
+
+3. ## **Populate from templates**
+
+   ```bash
+   ./dev-scripts/substitute-placeholders.sh
+   ```
+
+   - Generates `pyroject.toml` and `.pre-commit-config.yaml`
+   - Sets consistent python version throughout
+   - Recommends and configures Torch repositories based on detected CUDA version
+
+4. ## **Place modules under:\***
+   ```bash
+   src/<project_name>
+   ```
+5. ## **Launch jupyter and select the kernel**
+
+   ```bash
+   uv run jupyter lab
+   ```
+
+   - will have the same name as the project
+
+## Helper Utils:
+
+- ## safe synchronization:
+  ```bash
+  dev-scripts/safe-sync.sh
+  ```
+
+## Pre-commit linters included:
+
+- **Ruff** -- Fast Python linter (replacement for flake8/pylint) and formatter (ruff format).
+- **MyPy** -- Static type checker for Python code using type hints.
+- **Hadolint** -- Dockerfile checker.
+- **Prettier** -- Formatter for JSON, Markdown, YAML, and other text-based formats.
+- **Docformatter** -- Reformats Python docstrings to follow standard width and style.
+- **ShellCheck** -- Static analyzer for Bash and shell scripts.
+- **Yamlfmt** -- Strict YAML formatter.
+- **Yamllint** -- Linter for YAML syntax and structure.
+- **Action-Validator** -- Validator and linter for GitHub Actions workflow files.
+- **Latex** -- Common latex checks.
+- **Taplo** -- Formatter and validator for TOML files (e.g. pyproject.toml).
+- **Aspell** -- Spell checker using local dictionaries.
+- **Proselint** -- Prose linter for English grammar, clarity, and style issues.
+- **Latexmk** -- Builds LaTeX projects automatically and runs bibliography compilation (biber).
+- **Pandoc** -- Converts Markdown documents to PDF and other output formats (when template exists)
+
+## Additional features
+
+- Single-source of truth (pyproject.toml) for linter versions
+  - supports synchronization on CI/CD like GitHub actions
+  - pre-commit will self-check its versions
+- Sane default config for tools
+- Tooling, test and notebook support built into `pyproject.toml`
