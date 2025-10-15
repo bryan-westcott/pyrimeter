@@ -443,7 +443,6 @@ repos:
                 pandoc "$file" -o "$output" --pdf-engine=xelatex -H "$template"
               else
                 echo "Template not found: $template" >&2
-                exit 1
               fi
             done
           ' --
