@@ -81,41 +81,9 @@ dev_init() {
     HAS_NOTEBOOK=0
   fi
 
-  # -- Initialize ---
-
-  echo "📦 Dev init (create venv and/or sync as needed)"
-  REPO_VENV=".venv"
-  if [[ ! -d "$REPO_VENV" ]]; then
-    echo "...❄️ No venv found at $REPO_VENV — cold start"
-    if [[ ! -f "uv.lock" ]]; then
-      echo "...🆕 No uv.lock found — creating venv first"
-      # (Note: there's no '--dev' flag for 'uv venv'; dev/test deps are handled during 'uv sync')
-      if ! uv venv "$REPO_VENV"; then
-        echo "❌ Failed to create $REPO_VENV" >&2
-        { return 1 2>/dev/null; } || exit 1
-      fi
-    else
-      echo "...🔒 uv.lock found — will let 'uv sync' create venv implicitly"
-    fi
-
-    # One sync pass to populate venv (frozen if lock exists)
-    UV_SYNC_ARGS=()
-    # For pre-commit/linting/CI/CD
-    UV_SYNC_ARGS+=(--group tooling)
-    # For pytest
-    UV_SYNC_ARGS+=(--with tests)
-    # For notebook support
-    [[ "${HAS_NOTEBOOK:-0}" -eq 1 ]] && UV_SYNC_ARGS+=(--group notebook)
-    # Freeze if lock available
-    [[ -f uv.lock ]] && UV_SYNC_ARGS+=(--frozen)
-    # Run sync
-    echo "🔄 Syncing with args: ${UV_SYNC_ARGS[*]}"
-    uv sync "${UV_SYNC_ARGS[@]}"
-    echo "...✅ Sync successful"
-
-  else
-    echo "...♻️  Venv exists at $REPO_VENV — reusing existing venv without syncing"
-  fi
+  # -- Sync ---
+  # Synchronize, creating venv environment if needed
+  source "${PROJECT_ROOT}/dev-scripts/safe-sync.sh"
 
   # --- Activation phase ---
   #
