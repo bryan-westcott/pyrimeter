@@ -113,13 +113,13 @@ echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
     # Add more header (reverse order)
     sed -i "1s/^/#\n/" "$dst"
     if [[ "$name" == "pre-commit-config.yaml" ]]; then
-      # Add note for why we have an actual 
+      # Add note for why we have an actual
       sed -i '1s/^/# NOTE: an actual .pre-commit-config.yaml is needed for project to lint itself\n/' "$dst"
     fi
     sed -i "1s/^/# CREATED FROM: ${src}\n/" "$dst"
     sed -i '1s/^/# CREATED BY: substitute-placeholders.sh\n/' "$dst"
     sed -i '1s/^/# WARNING: THIS FILE IS AUTO-GENERATED, DO NOT EDIT!\n/' "$dst"
-    
+
     # WE NEED AN ACTUAL .pre-commit-config FOR PROJECT TO LINT ITSELF!
 # Pre-commit hooks supporting python, docker and latex
     echo "Updated: $src -> $dst"

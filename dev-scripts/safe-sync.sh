@@ -63,7 +63,7 @@ safe_sync() {
   else
     echo "🚫📓 No 'notebook' group found in $PYPROJECT_FILE."
   fi
-  
+
   # -- Check for tests ---
 
   # check if tests section in pyproject.toml
@@ -75,7 +75,7 @@ safe_sync() {
   else
     echo "🚫🔬  No 'tests' group found in $PYPROJECT_FILE."
   fi
-  
+
   # -- Check for tooling ---
 
   # check if tooling section in pyproject.toml
@@ -87,17 +87,6 @@ safe_sync() {
     echo "🚫🛠️  No 'tooling' extra found in $PYPROJECT_FILE; skipping Jupyter setup."
   fi
 
-  # -- Check for lock ---
-  
-  # Check for uv.lock; set HAS_LOCK and echo status
-  HAS_LOCK=0
-  if [[ -f uv.lock ]]; then
-    HAS_LOCK=1
-    echo "🔒 Detected uv.lock (HAS_LOCK=1)"
-  else
-    echo "🚫🔒 No uv.lock found (HAS_LOCK=0)"
-  fi
-  
   # -- Compose sync args ---
 
   # One sync pass to populate venv (frozen if lock exists)
