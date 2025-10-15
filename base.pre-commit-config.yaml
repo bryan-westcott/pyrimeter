@@ -302,6 +302,14 @@ repos:
       - id: uv-lock
   #
   # ---------------------------------------------------------
+  # taplo - toml checker
+  # ---------------------------------------------------------
+  - repo: https://github.com/ComPWA/taplo-pre-commit
+    rev: v0.9.3
+    hooks:
+      - id: taplo-format
+  #
+  # ---------------------------------------------------------
   # pre-commit-latex-hooks - common latex checks
   # ---------------------------------------------------------
   # Note: to update dictionary use aspell interactive: aspell check <file>
