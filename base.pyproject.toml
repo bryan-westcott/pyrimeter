@@ -24,7 +24,7 @@ dev = [
     "statsmodels>=0.14.2",
 ]
 
-# For notebook support 
+# For notebook support
 # Note: installed by safe-sync.sh by default
 # Note: dev-init.sh will register the uv environment as a kernel
 notebook = [
@@ -46,7 +46,7 @@ notebook = [
 ]
 
 # For CI/CD, linting, pre-commit, and type check stubs
-# Note: installed with safe-sync.sh 
+# Note: installed with safe-sync.sh
 tooling = [
     "pre-commit>=4.3.0",
     "pre-commit-uv>=4.2.0",  # different from uv-pre-commit below; both are needed!
@@ -270,7 +270,7 @@ version = "0.11.0"
 version = "4.0.0-alpha8"
 
 [tool.hadolint]
-version = "2.12.0"
+version = "2.14.0"
 
 [tool.action-validator]
 version = "0.8.0"
@@ -282,7 +282,10 @@ version = "0.8.0"
 # Note: BOTH are needed
 # Note: this is needed for pinning hook version in .pre-commit-config.yaml
 [tool.uv-pre-commit]
-version = "0.8.22"
+version = "0.9.3"
+
+[tool.ruff-pre-commit]
+version = "0.14.0"
 
 [tools.yamlfmt]
-version = "0.17.2"
+version = "0.18.0"

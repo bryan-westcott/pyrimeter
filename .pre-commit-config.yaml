@@ -143,7 +143,7 @@ repos:
   # ---------------------------------------------------------
   # Note: ruff installed in pyproject dev group
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.13.2
+    rev: v0.14.0
     hooks:
       - id: ruff
         name: ruff
@@ -249,9 +249,10 @@ repos:
   # yamlfmt - format yaml files
   # ---------------------------------------------------------
   - repo: https://github.com/google/yamlfmt
-    rev: v0.17.2 # pick a tagged release
+    rev: v0.18.0 # pick a tagged release
     hooks:
       - id: yamlfmt
+        types_or: [yaml]
   #
   # ---------------------------------------------------------
   # yamllint - check yaml files
@@ -262,7 +263,7 @@ repos:
   #       asking for trouble with github actions, so best to just
   #       use comments before the line, not inline for now
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.37.0
+    rev: v1.37.1
     hooks:
       - id: yamllint
         # Optional: Use custom yamllint config file
@@ -290,7 +291,7 @@ repos:
   # uv-pre-commit - ensure lock file is up to date
   # ---------------------------------------------------------
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.8.22
+    rev: 0.9.3
     hooks:
       - id: uv-lock
   #
