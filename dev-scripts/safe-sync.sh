@@ -111,18 +111,10 @@ safe_sync() {
   # For tests
   # Note: an optional group not dependency group
   [[ "${HAS_TEST_EXTRA:-0}" -eq 1 ]] && UV_SYNC_ARGS+=(--extra test)
-  # Freeze if lock available
-  [[ -f uv.lock ]] && UV_SYNC_ARGS+=(--frozen)
   # Run sync
   echo "🔄 Syncing with args: ${UV_SYNC_ARGS[*]}"
- 
-  # Perform sync
-  if uv sync "${UV_SYNC_ARGS[@]}" --check; then
-    echo "...🟢 Environment already in sync"
-  else
-      uv sync "${UV_SYNC_ARGS[@]}"
-      echo "...✅ Sync successful"
-  fi
+  uv sync "${UV_SYNC_ARGS[@]}"
+  echo "...✅ Sync successful"
 
 }
 
