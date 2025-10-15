@@ -61,6 +61,12 @@ _main() {
     echo "Updated: $f"
   done
 
+  # --- make a placeholder directory ---
+  mkdir -p "src/${PROJECT_NAME}"
+  placeholder_file="src/${PROJECT_NAME}/place_python_files_here.txt"
+  touch "${placeholder_file}"
+  echo "Created: ${placeholder_file}"
+
   echo "Done."
 }
 
