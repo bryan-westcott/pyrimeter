@@ -95,8 +95,15 @@ echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
   # --- process each file ---
   for src in "${FILES[@]}"; do
     [[ -f "$src" ]] || { echo "Skip (not found): $src" >&2; continue; }
-    # destination has no base. prefix
-    dst="${src#base.}"
+    dir=$(dirname "$src")
+    file=$(basename "$src")
+    name="${file#base.}"                 # strip leading "base."
+     # Special-case: pre-commit config gets a leading dot
+    if [[ "$name" == "pre-commit-config.yaml" ]]; then
+      dst="${dir}/.${name}"
+    else
+      dst="${dir}/${name}"    # pyproject keeps no leading dot
+    fi
     outplace_sed "$src" "$dst"
     # assert no placeholders remain
     if grep -Eq '<[A-Z_]+>' "$dst"; then
