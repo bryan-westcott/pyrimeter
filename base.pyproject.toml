@@ -49,7 +49,7 @@ tooling = [
   "pre-commit>=4.3.0",
   "pre-commit-uv>=4.2.0", # different from uv-pre-commit below; both are needed!
   "yamllint>=1.37.1",
-  "ruff>=0.11.8",
+  "ruff>=0.14.0",
   "mypy>=1.15.0",
   "docformatter>=1.7.7",  # <=1.76 incompatible with pre-commit 4.0+
   # stubs only below, will not install underlying package
@@ -319,9 +319,6 @@ version = "0.8.0"
 # Note: this is needed for pinning hook version in .pre-commit-config.yaml
 [tool.uv-pre-commit]
 version = "0.9.3"
-
-[tool.ruff-pre-commit]
-version = "0.14.0"
 
 [tools.yamlfmt]
 version = "0.18.0"
