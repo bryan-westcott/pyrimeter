@@ -322,3 +322,6 @@ version = "0.9.3"
 
 [tools.yamlfmt]
 version = "0.18.0"
+
+[tools.taplo]
+version = "0.9.3"

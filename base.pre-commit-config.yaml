@@ -118,6 +118,15 @@ repos:
         entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh yamlfmt"
         language: script
         require_serial: true
+      #
+      # ---------------------------------------------------------
+      # taplo hook version update
+      # ---------------------------------------------------------
+      - id: update-taplo-version-from-pyproject-toml
+        name: update taplo version in pre-commit
+        entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh taplo"
+        language: script
+        require_serial: true
   #
   # ---------------------------------------------------------
   # basic checks (see here: https://pre-commit.com/hooks.html)
@@ -316,6 +325,16 @@ repos:
       - id: tilde-cite
       - id: unique-labels
       - id: cleveref-instead-of-autoref
+  #
+  # ---------------------------------------------------------
+  # taplo - toml checker
+  # ---------------------------------------------------------
+  - repo: https://github.com/tamasfe/taplo
+    rev: 0.9.3
+    hooks:
+      - id: taplo
+        args: ["fmt"] # write changes (auto-fix)
+        files: \.toml$
   #
   # ---------------------------------------------------------
   # aspell (local) - spell checker using LOCAL aspell
