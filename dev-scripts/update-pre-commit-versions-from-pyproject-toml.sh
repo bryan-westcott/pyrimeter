@@ -130,7 +130,7 @@ update_pre_commit_versions() {
 
 
     # --- Detect repo_url ---
-    
+
     # Pattern used to identify the target repo line in pre-commit config:
     # We expect something like: "repo: ...<something>.<tool_name>..."
     # The leading dot ensures we don't over-match short substrings (heuristic).
@@ -175,7 +175,7 @@ update_pre_commit_versions() {
     # Now ensure the substitution was successful
     sed -n "/${repo_url_pattern_escaped?}.*/!b; n; /${rev_pattern_escaped?}.*/!q1; /${version?}/!q1; q0" "${pre_commit_config_yaml_path?}" \
         || { echo "ERROR: repo block not updated to version '${version}'"; exit 1; }
-    
+
     # --- Done ---
 
     # Final status echo for visibility
