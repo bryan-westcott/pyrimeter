@@ -88,6 +88,7 @@ dev_init() {
   # --- Activation phase ---
   #
   echo "⚡ Activating venv (if needed)"
+  local REPO_VENV="${PROJECT_ROOT}/.venv"
   if [[ -n "${VIRTUAL_ENV:-}" ]]; then
     # If a venv is already active, it must be the project .venv
     if [ "$(readlink -f -- "$VIRTUAL_ENV")" != "$(readlink -f -- "$REPO_VENV")" ]; then
