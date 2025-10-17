@@ -15,12 +15,22 @@
 # Ensure script is sourced, not executed
 (return 0 2>/dev/null) || {
   echo "❌ This script must be sourced, not executed."
-  echo "   Run it like this:  source dev-init.sh"
+  echo "   Run it like this:  source dev-scripts/dev-init.sh"
   exit 1
 }
+  
+# Resolve directory of this script, then its parent (the project root)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR?}/.." && pwd)"
+cd "${PROJECT_ROOT?}" || {
+  echo "❌ Could not cd to $PROJECT_ROOT" >&2
+  return 1 2>/dev/null || true
+}
+
 
 # for safesync call
-source "${PROJECT_ROOT}/dev-scripts/safe-sync.sh"
+source "${PROJECT_ROOT?}/dev-scripts/safe-sync.sh"
+source "${PROJECT_ROOT?}/dev-scripts/register-jupyter-kernel.sh"
 
 # Note: this has to be a subshell better trap error in the dev script itself
 dev_init() {
@@ -57,41 +67,22 @@ dev_init() {
   # Note: trap persist until function succeeds and runs bottom "trap - ERR"
   trap 'echo "❌ Error in dev-init.sh at line $LINENO"; return 1' ERR
 
-  # Resolve directory of this script, then its parent (the project root)
-  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-  cd "$PROJECT_ROOT" || {
-    echo "❌ Could not cd to $PROJECT_ROOT" >&2
-    return 1 2>/dev/null || true
-  }
-
   # Check for pyproject.toml
   PYPROJECT_FILE="${PROJECT_ROOT?}/pyproject.toml"
-  if [ ! -f "$PYPROJECT_FILE" ]; then
+  if [ ! -f "${PYPROJECT_FILE?}" ]; then
     echo "❌ No pyproject.toml found in $PROJECT_ROOT, expected a minimal skeleton" >&2
     { return 1 2>/dev/null; } || exit 1
   fi
 
-
-  # -- Check for notebook ---
-
-  # check if notebook section in pyproject.toml
-  if grep -q '^[[:space:]]*notebook[[:space:]]*=' "$PYPROJECT_FILE"; then
-    echo "📓 Detected 'notebook' group in $PYPROJECT_FILE"
-    HAS_NOTEBOOK=1
-  else
-    echo "ℹ️  No 'notebook' group found in $PYPROJECT_FILE; skipping Jupyter setup."
-    HAS_NOTEBOOK=0
-  fi
-
   # -- Sync ---
   # Synchronize, creating venv environment if needed
-  safe_sync
+  # call it and propagate errors
+  safe_sync || { st=$?; echo "[dev-init] safe_sync failed (status $st)" >&2; return "$st"; }
 
   # --- Activation phase ---
   #
   echo "⚡ Activating venv (if needed)"
-  local REPO_VENV="${PROJECT_ROOT}/.venv"
+  local REPO_VENV="${PROJECT_ROOT?}/.venv"
   if [[ -n "${VIRTUAL_ENV:-}" ]]; then
     # If a venv is already active, it must be the project .venv
     if [ "$(readlink -f -- "$VIRTUAL_ENV")" != "$(readlink -f -- "$REPO_VENV")" ]; then
@@ -103,7 +94,7 @@ dev_init() {
       echo "...🟢 Already active: $VIRTUAL_ENV"
     fi
   else
-    if ! source "$REPO_VENV/bin/activate"; then
+    if ! source "${REPO_VENV?}/bin/activate"; then
       echo "❌ Failed to activate $REPO_VENV" >&2
       { return 1 2>/dev/null; } || exit 1
     fi
@@ -111,31 +102,8 @@ dev_init() {
   fi
 
   # --- Register jupyter notebook ---
+  register_jupyter_kernel || { st=$?; echo "[dev-init] register_jupyter_kernel failed (status $st)" >&2; return "$st"; }
 
-  # register jupyter kernel, but only if notebook in pyproject.toml
-  if [ "$HAS_NOTEBOOK" -eq 1 ]; then
-    KERNEL_NAME="$(basename "$PROJECT_ROOT")"
-    echo "🧠 Registering Jupyter kernel: ${KERNEL_NAME?}..."
-    if ! uv run ipython kernel install \
-          --user \
-          --env VIRTUAL_ENV "$PROJECT_ROOT/.venv" \
-          --name "${KERNEL_NAME?}" \
-          --display-name "${KERNEL_NAME?}"
-    then
-      echo "❌ Kernel registration failed — possibly missing ipykernel or misconfigured .venv" >&2
-      echo "   Try: uv sync --dev --group notebook" >&2
-      { return 1 2>/dev/null; } || true  # prevent killing ssh if sourced
-    fi
-    echo "Warning: kernels persist outside of uv in '~/.local/share/jupyter/kernels/'"
-    echo "Warning: kernels may collide if same project is initialized elsewhere"
-    echo "Launch with: "
-    echo "    uv run --with notebook jupyter lab"
-    echo "Choose: '${KERNEL_NAME}' kernel"
-    echo "Warning: jupyter bug may require click in file browser before kernel can be selected"
-    echo "...✅ Registered jupyter kernel ${KERNEL_NAME}"
-  else
-    echo "...ℹ️  No notebook group detected — no kernel to add or register."
-  fi
 
   # ---- Done ----
 
