@@ -19,6 +19,9 @@
   exit 1
 }
 
+# for safesync call
+source "${PROJECT_ROOT}/dev-scripts/safe-sync.sh"
+
 # Note: this has to be a subshell better trap error in the dev script itself
 dev_init() {
 
@@ -83,7 +86,7 @@ dev_init() {
 
   # -- Sync ---
   # Synchronize, creating venv environment if needed
-  source "${PROJECT_ROOT}/dev-scripts/safe-sync.sh"
+  safe_sync
 
   # --- Activation phase ---
   #
