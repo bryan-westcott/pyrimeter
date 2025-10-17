@@ -321,5 +321,5 @@ version = "0.8.0"
 [tool.uv-pre-commit]
 version = "0.9.3"
 
-[tools.yamlfmt]
+[tool.yamlfmt]
 version = "0.18.0"
