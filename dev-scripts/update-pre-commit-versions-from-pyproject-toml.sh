@@ -66,62 +66,120 @@ update_pre_commit_versions() {
     local pyproject_toml_path="${root_dir?}/pyproject.toml"
     local pre_commit_config_yaml_path="${root_dir?}/.pre-commit-config.yaml"
 
+    # Ensure both files exist
+    if [[ ! -f "${pyproject_toml_path}" ]]; then
+      echo "ERROR: missing ${pyproject_toml_path}" >&2
+      return 1
+    fi
+    if [[ ! -f "${pre_commit_config_yaml_path}" ]]; then
+      echo "ERROR: missing ${pre_commit_config_yaml_path}" >&2
+      return 1
+    fi
+
+      # require exactly one non-empty arg
+    if [[ $# -lt 1 || -z ${1-} ]]; then
+      echo "Usage: update_pre_commit_versions <tool_name>" >&2
+      return 2
+    fi
     # Required parameter: tool name (e.g., "ruff")
     local tool_name=${1?}
+    # also reject all-whitespace
+    if [[ -z "${tool_name//[[:space:]]/}" ]]; then
+      echo "ERROR: <tool_name> cannot be blank/whitespace" >&2
+      return 2
+    fi
 
+    # --- 1) Detect version ----
+    #
+    # requirements-style versions (may yield 0..N lines)
+    mapfile -t version_requirements_arr < <(
+        grep -Eo "\s*\"?${tool_name?}\"?\s*(=|<|>)*=\s*\"?[0-9]+(\.[0-9]+)*\"?,?" "${pyproject_toml_path?}" \
+        | grep -Eo "[0-9]+(\.[0-9]+)*" || true
+    )
+
+    # [tool.<name>] section version (may yield 0..N lines)
+    mapfile -t version_section_arr < <(
+        grep -Pzo "\[tool\.${tool_name?}\][^\[]*\n\s*version\s*=\s*\K[^\n]+" "${pyproject_toml_path?}" \
+        | tr -d '\0' \
+        | sed 's/[\"'\'']//g' || true
+    )
+
+    # If more than one requirements match, error
+    if (( ${#version_requirements_arr[@]} > 1 )); then
+        echo "ERROR: multiple requirement-style versions found for '${tool_name}': ${version_requirements_arr[*]}" >&2
+        return 1
+    fi
+    # If more than one section match, error
+    if (( ${#version_section_arr[@]} > 1 )); then
+        echo "ERROR: multiple [tool.${tool_name}] versions found: ${version_section_arr[*]}" >&2
+        return 1
+    fi
+    # If neither have any matches, error
+    if (( ${#version_requirements_arr[@]} == 0 )) && (( ${#version_section_arr[@]} == 0 )); then
+        echo "ERROR: no version found for '${tool_name}' in requirements or [tool.${tool_name}] section." >&2
+        return 1
+    fi
+    # if both have matches, error
+    if (( ${#version_requirements_arr[@]} == 1 )) && (( ${#version_section_arr[@]} == 1 )); then
+        echo "ERROR: version found in BOTH requirements and [tool.${tool_name}] section (ambiguous)." >&2
+        echo "       requirements=${version_requirements_arr[0]} section=${version_section_arr[0]}" >&2
+        return 1
+    fi
+    # Prefer requirement hit, else section hit (after checks)
+    local version="${version_requirements_arr[0]:-${version_section_arr[0]}}"
+
+
+    # --- Detect repo_url ---
+    
     # Pattern used to identify the target repo line in pre-commit config:
     # We expect something like: "repo: ...<something>.<tool_name>..."
     # The leading dot ensures we don't over-match short substrings (heuristic).
-    local repo_url=".${tool_name?}.*"
+    local repo_url_pattern="repo:\s*.*${tool_name?}.*"
+    local rev_pattern="rev:\s\+\(v\?\)"
+    # Escape slashes for sed; we inject the repo/rev patterns into a sed script
+    local repo_url_pattern_escaped=${repo_url_pattern//\//\\/}
+    local rev_pattern_escaped=${rev_pattern//\//\\/}
 
-    # ------------------------------------------------------------
-    # 1) Try to extract a version from requirement-like entries in pyproject.toml
-    #    Example matched text:  '"black" == "23.12.1",'  -> extract 23.12.1
-    #    We:
-    #      - first grep the dependency lines that include the tool and a version operator
-    #      - then extract the version number itself (numbers and dots)
-    # ------------------------------------------------------------
-    version_requirements=$(
-        grep -Eo "\s*\"?${tool_name?}\"?\s*(=|<|>)*=\s*\"?[0-9]+(\.[0-9]+)*\"?,?" ${pyproject_toml_path?} \
-        | grep -Eo "[0-9]+(\.[0-9]+)*"
+    # Ensure exactly one repo match (same pattern as sed address)
+    mapfile -t _repo_matches < <(
+      sed -n "/${repo_url_pattern_escaped?}.*/p" "${pre_commit_config_yaml_path?}"
     )
+    if [[ ${#_repo_matches[@]} -eq 0 ]]; then
+      echo "ERROR: no matching 'repo:' for pattern '${repo_url_pattern}' in ${pre_commit_config_yaml_path}" >&2
+      return 1
+    fi
+    if [[ ${#_repo_matches[@]} -gt 1 ]]; then
+      echo "ERROR: multiple matching 'repo:' lines for pattern '.${tool_name}.*' in ${pre_commit_config_yaml_path}:" >&2
+      printf '  - %s\n' "${_repo_matches[@]}" >&2
+      return 1
+    fi
+
+    # Check for desired repo followed by "rev:" revision line
+    sed -n "/${repo_url_pattern_escaped?}.*/!b; n; /${rev_pattern_escaped?}.*/!q1; q0" "${pre_commit_config_yaml_path?}" \
+        || { echo "ERROR: expected 'repo: …${tool_name}…' immediately followed by a 'rev:' line"; exit 1; }
 
     # ------------------------------------------------------------
-    # 2) Also look for a tool section like:
-    #       [tool.<tool_name>]
-    #       version = "X.Y.Z"
-    #    We:
-    #      - grep from the section header up to (but not including) the next '['
-    #      - find the `version =` line and extract the right-hand side sans quotes
-    # ------------------------------------------------------------
-    version_section=$(
-        grep -Pzo "\[tool\.${tool_name?}\][^\[]*\n\s*version\s*=\s*\K[^\n]+" ${pyproject_toml_path?} \
-        | tr -d '\0' \
-        | sed 's/[\"'\'']//g'
-    )
-
-    # Prefer requirement-derived version; fall back to [tool.<name>] version
-    version="${version_requirements:-$version_section}"
-
-    # Escape slashes for sed; we inject the repo pattern into a sed script
-    repo_url_escaped=${repo_url//\//\\/}
-
-    # ------------------------------------------------------------
-    # 3) Update `.pre-commit-config.yaml`:
+    # Update `.pre-commit-config.yaml`:
     #    - Find the line that matches `repo:\s*.<tool>.*`
     #    - On the *next* line, replace `rev:` with the discovered version,
     #      preserving an optional existing leading 'v' (with `\(v\?\)`).
     #
     #    sed script breakdown:
-    #      /repo:\s*${repo_url_escaped}.*/   -> match the target repo line
+    #      /repo:\s*${repo_url_pattern_escaped}.*/   -> match the target repo line
     #      !b                                 -> if not matched, branch to end (no-op)
     #      n                                  -> move to the next line (expected `rev:`)
     #      s/rev:\s\+\(v\?\).*/rev: \1${version}/ -> substitute rev, keep optional 'v'
     # ------------------------------------------------------------
-    sed -i "/repo:\s*${repo_url_escaped?}.*/!b;n;s/rev:\s\+\(v\?\).*/rev: \1${version?}/" "${pre_commit_config_yaml_path?}"
+    sed -i "/${repo_url_pattern_escaped?}.*/!b; n; s/${rev_pattern_escaped?}.*/rev: \1${version?}/" "${pre_commit_config_yaml_path?}"
+
+    # Now ensure the substitution was successful
+    sed -n "/${repo_url_pattern_escaped?}.*/!b; n; /${rev_pattern_escaped?}.*/!q1; /${version?}/!q1; q0" "${pre_commit_config_yaml_path?}" \
+        || { echo "ERROR: repo block not updated to version '${version}'"; exit 1; }
+    
+    # --- Done ---
 
     # Final status echo for visibility
-    echo "tool=${tool_name}, repo_url=${repo_url}, version:(used=${version}, requirements=${version_requirements}, section=${version_section})"
+    echo "tool=${tool_name}, version=${version}"
 }
 
 # ------------------------------------------------------------------------------
@@ -130,5 +188,5 @@ update_pre_commit_versions() {
 #   If it's sourced, do nothing (function is then available in the shell).
 # ------------------------------------------------------------------------------
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    update_pre_commit_versions ${1?} ${2}
+    update_pre_commit_versions "${1?}" "${2}"
 fi
