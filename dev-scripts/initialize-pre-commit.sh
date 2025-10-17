@@ -15,12 +15,6 @@ initialize_pre_commit() {
   local old_opts
   old_opts=$(set +o)
 
-  # Safely remove traps
-  # Always restore options and history recording when this function exits
-  # Note: will handle even if old_opts is unset (which can leave stale
-  #       traps in bash otherwise)
-  trap 'set +u; trap - RETURN ERR; [ "${old_opts+x}" ] && eval "$old_opts"; set -o history' RETURN
-
   # Set temp options
   # -u (nounset): treat unset variables as an error
   #   Example: echo "$FOO" when FOO is not set → causes immediate failure
@@ -36,9 +30,29 @@ initialize_pre_commit() {
   #   This is useful when chaining commands with | where every stage matters.
   set -o pipefail
 
-  # trap errors (assume sourced) to indicate dev-init problems
-  # Note: trap persist until function succeeds and runs bottom "trap - ERR"
-  trap 'echo "❌ Error in initialize-pre-commit.sh at line $LINENO"; return 1' ERR
+  # handle errors
+  trap '
+    st=$?
+    # disarm immediately so we don not re-enter / double-report
+    trap - ERR
+    # try to show actual line and name
+    echo "❌ Error in ${BASH_SOURCE[1]:-${BASH_SOURCE[0]}} at line ${BASH_LINENO[0]:-$LINENO}"
+    # Return original status if we can
+    return "$st" 2>/dev/null || true
+  ' ERR
+
+  # cleanup (restore) on return
+  trap '
+    # Self-disarm first; this handler should only run once
+    # Also disarm ERR in case anything else fails below or later
+    trap - RETURN ERR
+    # disable nounset before touching old_opts
+    set +u
+    # Restore saved shell options if they were captured
+    [ "${old_opts+x}" ] && eval "$old_opts"
+    # Re-enable history
+    set -o history
+  ' RETURN
 
   # Resolve directory of this script, then its parent (the project root)
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -94,3 +108,7 @@ initialize_pre_commit() {
 }
 
 initialize_pre_commit "$@"
+
+# Defensive: if RETURN didn’t fire (due to return inside ERR trap),
+# don’t leave traps behind
+trap - ERR RETURN

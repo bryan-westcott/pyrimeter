@@ -6,12 +6,12 @@
 # Note: this has to be a subshell to avoid conflicting with caller traps
 safe_sync() {
 
-  # run in a subshell 
+  # run in a subshell
   (
     # Temporarily (subshell only) disable interactive history & file appends to avoid pollution
     set +o history
     set -euo pipefail
-  
+
     # Resolve directory of this script, then its parent (the project root)
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     PROJECT_ROOT="$(cd "${SCRIPT_DIR?}/.." && pwd)"
@@ -19,16 +19,16 @@ safe_sync() {
       echo "❌ Could not cd to $PROJECT_ROOT" >&2
       exit 1
     }
-  
+
     # Check for pyproject.toml
     PYPROJECT_FILE="${PROJECT_ROOT?}/pyproject.toml"
     if [ ! -f "${PYPROJECT_FILE?}" ]; then
       echo "❌ No pyproject.toml found in $PROJECT_ROOT, expected a minimal skeleton" >&2
       exit 1
     fi
-  
+
     # -- Check for notebook ---
-  
+
     # check if notebook section in pyproject.toml
     HAS_NOTEBOOK_GROUP=0
     if grep -q '^[[:space:]]*notebook[[:space:]]*=' "${PYPROJECT_FILE?}"; then
@@ -37,9 +37,9 @@ safe_sync() {
     else
       echo "🚫📓 No 'notebook' group found in $PYPROJECT_FILE."
     fi
-  
+
     # -- Check for tests ---
-  
+
     # check if tests section in pyproject.toml
     # NOTE: this should be an EXTRA not a group!
     HAS_TEST_EXTRA=0
@@ -49,9 +49,9 @@ safe_sync() {
     else
       echo "🚫🔬  No 'tests' group found in $PYPROJECT_FILE."
     fi
-  
+
     # -- Check for tooling ---
-  
+
     # check if tooling section in pyproject.toml
     HAS_TOOLING_GROUP=0
     if grep -q '^[[:space:]]*tooling[[:space:]]*=' "${PYPROJECT_FILE?}"; then
@@ -60,9 +60,9 @@ safe_sync() {
     else
       echo "🚫🛠️  No 'tooling' extra found in $PYPROJECT_FILE; skipping Jupyter setup."
     fi
-  
+
     # -- Compose sync args ---
-  
+
     # One sync pass to populate venv (frozen if lock exists)
     UV_SYNC_ARGS=()
     # Make dev explicit

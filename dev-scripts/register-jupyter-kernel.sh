@@ -6,7 +6,7 @@
 # Note: this has to be a subshell to avoid conflicting with caller traps
 register_jupyter_kernel() {
 
-  # run in a subshell 
+  # run in a subshell
   (
     # Temporarily (subshell only) disable interactive history & file appends to avoid pollution
     set +o history
@@ -19,16 +19,16 @@ register_jupyter_kernel() {
       echo "❌ Could not cd to $PROJECT_ROOT" >&2
       exit 1
     }
-  
+
     # Check for pyproject.toml
     PYPROJECT_FILE="${PROJECT_ROOT?}/pyproject.toml"
     if [ ! -f "${PYPROJECT_FILE?}" ]; then
       echo "❌ No pyproject.toml found in $PROJECT_ROOT, expected a minimal skeleton" >&2
       exit 1
     fi
-  
+
     # -- Check for notebook ---
-  
+
     # check if notebook section in pyproject.toml
     HAS_NOTEBOOK_GROUP=0
     if grep -q '^[[:space:]]*notebook[[:space:]]*=' "${PYPROJECT_FILE?}"; then

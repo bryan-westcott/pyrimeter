@@ -67,7 +67,7 @@
 #     committed versions
 #   - for the pyproj-template project, you will also need to update both
 #     the base.* files which will become the future defaults.
-#     
+#
 #------------------------------------------------------------------------------
 
 update_pre_commit_versions() {
