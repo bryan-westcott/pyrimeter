@@ -58,6 +58,16 @@
 #   - BSD/macOS `sed -i` syntax differs when providing a backup suffix; this script
 #     uses GNU-style `-i` without a suffix.
 #
+# Note: how to use with pre-commit autoupdate
+#   - simply run `uv run pre-commit autoupdate`
+#   - then a git diff will show which versions are stale
+#   - update the stale versions in the `pyproject.toml` file and commit
+#       both `pyproject.toml` and `.pre-commit-config.yaml`
+#   - the pre-commit hook will pull them from there and compare with your
+#     committed versions
+#   - for the pyproj-template project, you will also need to update both
+#     the base.* files which will become the future defaults.
+#     
 #------------------------------------------------------------------------------
 
 update_pre_commit_versions() {
