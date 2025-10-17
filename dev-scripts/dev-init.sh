@@ -58,13 +58,13 @@ dev_init() {
 
   # handle errors
   trap '
-    st=$?
+    set -- "$?"  # $1 = original status (avoids SC2154 on a named var)
     # disarm immediately so we do not re-enter / double-report
     trap - ERR
     # try to show actual line and name
     echo "❌ Error in ${BASH_SOURCE[1]:-${BASH_SOURCE[0]}} at line ${BASH_LINENO[0]:-$LINENO}"
     # Return original status if we can
-    return "$st" 2>/dev/null || true
+    return "$1" 2>/dev/null || true
   ' ERR
 
   # cleanup (restore) on return
