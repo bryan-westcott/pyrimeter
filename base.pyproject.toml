@@ -50,7 +50,7 @@ tooling = [
   "pre-commit-uv>=4.2.0", # different from uv-pre-commit below; both are needed!
   "yamllint>=1.37.1",
   "ruff>=0.14.0",
-  "mypy>=1.15.0",
+  "mypy>=1.18.2",
   "docformatter>=1.7.7",  # <=1.76 incompatible with pre-commit 4.0+
   "taplo>=0.9.3",         # for toml
   # stubs only below, will not install underlying package
@@ -304,7 +304,7 @@ version = "0.11.0"
 # only version<3 supported by ubuntu 22.04
 # only version<=2.7.1 supported by
 #   https://github.com/pre-commit/mirrors-prettier/
-version = "4.0.0-alpha8"
+version = "4.0.0-alpha.8"
 
 [tool.hadolint]
 version = "2.14.0"
