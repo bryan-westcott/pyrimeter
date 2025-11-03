@@ -196,7 +196,7 @@ ignore_errors = true
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
 src = ["src"]
-exclude = [
+extend-exclude = [
   ".bzr",
   ".direnv",
   ".eggs",
@@ -236,7 +236,6 @@ exclude = [
   "advanced_lora*",
   "lcm_distill*",
 ]
-extend-exclude = ["*.ipynb"]
 # Black uses 88, default is 240
 line-length = 120
 indent-width = 4
