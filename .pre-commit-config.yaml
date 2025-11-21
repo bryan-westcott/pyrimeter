@@ -260,7 +260,7 @@ repos:
   # yamlfmt - format yaml files
   # ---------------------------------------------------------
   - repo: https://github.com/google/yamlfmt
-    rev: v0.18.0
+    rev: v0.20.0
     hooks:
       - id: yamlfmt
         types_or: [yaml]
