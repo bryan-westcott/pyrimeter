@@ -66,6 +66,18 @@ A modern Python project starter template featuring robust linting, pre-commit au
 - **Latexmk** -- Builds LaTeX projects automatically and runs bibliography compilation (biber).
 - **Pandoc** -- Converts Markdown documents to PDF and other output formats (when template exists)
 
+## Github Actions features
+
+- Primary workflow for pull request: `.github/workflows/pr.yaml`
+  - calls all reusable workflows
+  - dynamically determines which steps are needed to save Github Actions minutes
+  - designed to work with a dispatch call
+- Reusable workflows:
+  - run all code quality checks (same as pre-commit): `.github/workflow/all-code-tests.yaml`
+  - run pytests tests (currently just `smoke` test): `.github/workflows/all-pytest-tests.yaml`
+- Actions:
+    - same as those for pre-commit hook, with care to match versions and arguments
+
 ## Additional features
 
 - Single-source of truth (pyproject.toml) for linter versions
