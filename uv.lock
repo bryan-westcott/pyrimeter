@@ -1669,7 +1669,7 @@ wheels = [
 [[package]]
 name = "pyproj-template-placeholder"
 version = "0.0.1"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "opencv-contrib-python" },
 ]

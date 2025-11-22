@@ -99,6 +99,18 @@ test = [
   "hypothesis",
 ]
 
+# To build a wheel/sdist, with:
+# uv build
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+# entrypoint for tests
+[project.scripts]
+# quick
+pytest-smoke = "opguard.tests.test:smoke"
+
+
 [tool.uv]
 
 # never use system python
