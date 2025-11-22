@@ -1,6 +1,7 @@
 """PyTest tests."""
 
 import pytest
+from loguru import logger
 
 
 @pytest.mark.smoke
@@ -9,4 +10,4 @@ def smoke() -> None:
 
     Note: replace this code with actual test.
     """
-    pass  # noqa: PIE790
+    logger.warning("PLACEHOLDER SMOKE TEST, REPLACE WITH ACTUAL TEST!")
