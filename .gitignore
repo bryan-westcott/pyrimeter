@@ -35,3 +35,5 @@ lint_result.txt
 *.xlsx
 *.pdf
 *.log
+
+.coverage

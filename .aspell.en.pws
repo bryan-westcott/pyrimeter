@@ -1,8 +1,9 @@
-personal_ws-1.1 en 33
+personal_ws-1.1 en 35
 Bolierplate
 CUDA
 Docformatter
 Dockerfile
+Github
 Hadolint
 JSON
 LaTeX
@@ -10,6 +11,7 @@ Latexmk
 MyPy
 Pandoc
 Proselint
+PyTest
 Reformats
 ShellCheck
 Taplo
