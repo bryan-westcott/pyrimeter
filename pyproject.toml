@@ -63,7 +63,7 @@ tooling = [
   "pre-commit>=4.3.0",
   "pre-commit-uv>=4.2.0", # different from uv-pre-commit below; both are needed!
   "yamllint>=1.37.1",
-  "ruff>=0.14.0",
+  "ruff>=0.14.1",
   "mypy>=1.18.2",
   "docformatter>=1.7.7",  # <=1.76 incompatible with pre-commit 4.0+
   "taplo>=0.9.3",         # for toml

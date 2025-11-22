@@ -26,19 +26,29 @@ dev = [
 # Note: installed by safe-sync.sh by default
 # Note: dev-init.sh will register the uv environment as a kernel
 notebook = [
+  # these two are critical
+  "jupyterlab>=3.6.8",
   "ipykernel>=6.29.5",
+]
+
+# these are nice to have and fairly lightweight
+notbook-extras = [
   "jupyter>=1.1.1",
   "nbconvert>=7.16.4",
-  "jupyterlab>=3.6.8",
-  "ipympl>=0.9.5",
+  "nbqa>=1.9.1",
   "itables>=2.2.4",
   "ipycache>=0.1.4",
-  "nbqa>=1.9.1",
+  "ipympl>=0.9.5",
+  "ipywidgets>=8.1.3",
+]
+
+# These have heavier dependencies (JS, latex, etc)
+# Only install if needed or sync times will suffer
+notebook-heavy = [
   "jupyterlab-latex>=4.3.0",
   "jupyterlab-theme-solarized-dark>=3.0.1",
   "jupyterlab-github>=3.0.1",
   "jupyterlab-spellchecker>=0.8.3",
-  "ipywidgets>=8.1.3",
   "ipyplot>=1.1.2",
   "jupyterlab-git>=0.50.2",
 ]
@@ -67,6 +77,8 @@ tooling = [
   "types-tqdm>=4.67.0.20250417",
 ]
 
+# These can be installed like pyproj_template[test]
+# or with sync as `uv sync --extra x`
 [project.optional-dependencies]
 
 # Dependencies
@@ -82,6 +94,18 @@ test = [
   "xdoctest>=1.2.0",
   "hypothesis",
 ]
+
+# To build a wheel/sdist, with:
+# uv build
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+# entrypoint for tests
+[project.scripts]
+# quick
+pytest-smoke = "opguard.tests.test:smoke"
+
 
 [tool.uv]
 
@@ -196,6 +220,7 @@ ignore_errors = true
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
 src = ["src"]
+# Add to default, don't replace
 extend-exclude = [
   ".bzr",
   ".direnv",
