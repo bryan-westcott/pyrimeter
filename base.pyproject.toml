@@ -7,7 +7,7 @@ description = "<PROJECT_DESCRIPTION>"
 requires-python = "==3.<PYTHON_MINOR_VERSION>.*"
 readme = "README.md"
 version = "0.0.1"
-dependencies = ["opencv-contrib-python==4.11.0.86"]
+dependencies = ["opencv-contrib-python==4.11.0.86", "loguru"]
 
 # Note: these install with: `uv sync --group x` and are not packaged
 # Warning: these will be removed on subsequent `uv sync` without this group
@@ -104,7 +104,32 @@ build-backend = "setuptools.build_meta"
 # entrypoint for tests
 [project.scripts]
 # quick
-pytest-smoke = "opguard.tests.test:smoke"
+pytest-smoke = "<PROJECT_NAME>.tests.test:smoke"
+
+# Pytest config (minimal and portable)
+[tool.pytest.ini_options]
+# Don't set pythonpath, rely on editable install
+testpaths = ["src/<PROJECT_NAME>/tests"]
+python_files = ["test.py"]
+# collect functions for possible use
+python_functions = ["smoke"]
+# Default flags: no stdout spam, show locals on failure, fail on unknown marks
+addopts = """
+  -q
+  --strict-markers
+  --showlocals
+  --maxfail=1
+  --codeblocks
+  --doctest-modules
+  --xdoctest
+  --xdoctest-style=google
+  --cov=<PROJECT_NAME>
+  --cov-report=term-missing
+"""
+# Declare marks
+# See decorators in actual test code
+# Selectively run with: pytest -m <marker>
+markers = ["smoke: fast smoke tests that run on CPU"]
 
 
 [tool.uv]
