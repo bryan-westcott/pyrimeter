@@ -6,8 +6,8 @@
 # tools, notebooks and popular linters/formatters/type-checkers
 
 [project]
-name = "Test"
-description = "Desc"
+name = "pyproj-template-placeholder"
+description = "INSERT DESCRIPTION HERE"
 requires-python = "==3.11.*"
 readme = "README.md"
 version = "0.0.1"

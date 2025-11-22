@@ -1667,6 +1667,136 @@ wheels = [
 ]
 
 [[package]]
+name = "pyproj-template-placeholder"
+version = "0.0.1"
+source = { virtual = "." }
+dependencies = [
+    { name = "opencv-contrib-python" },
+]
+
+[package.optional-dependencies]
+test = [
+    { name = "hypothesis" },
+    { name = "pytest" },
+    { name = "pytest-codeblocks" },
+    { name = "pytest-cov" },
+    { name = "pytest-doctestplus" },
+    { name = "pytest-xdist" },
+    { name = "xdoctest" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "matplotlib" },
+    { name = "pandas" },
+    { name = "seaborn" },
+    { name = "statsmodels" },
+]
+notbook-extras = [
+    { name = "ipycache" },
+    { name = "ipympl" },
+    { name = "ipywidgets" },
+    { name = "itables" },
+    { name = "jupyter" },
+    { name = "nbconvert" },
+    { name = "nbqa" },
+]
+notebook = [
+    { name = "ipykernel" },
+    { name = "jupyterlab" },
+]
+notebook-heavy = [
+    { name = "ipyplot" },
+    { name = "jupyterlab-git" },
+    { name = "jupyterlab-github" },
+    { name = "jupyterlab-latex" },
+    { name = "jupyterlab-spellchecker" },
+    { name = "jupyterlab-theme-solarized-dark" },
+]
+tooling = [
+    { name = "boto3-stubs" },
+    { name = "docformatter" },
+    { name = "matplotlib-stubs" },
+    { name = "ml-dtypes" },
+    { name = "mypy" },
+    { name = "mypy-boto3-s3" },
+    { name = "pandas-stubs" },
+    { name = "pre-commit" },
+    { name = "pre-commit-uv" },
+    { name = "ruff" },
+    { name = "taplo" },
+    { name = "types-pillow" },
+    { name = "types-python-dateutil" },
+    { name = "types-pytz" },
+    { name = "types-pyyaml" },
+    { name = "types-requests" },
+    { name = "types-tqdm" },
+    { name = "yamllint" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "hypothesis", marker = "extra == 'test'" },
+    { name = "opencv-contrib-python", specifier = "==4.11.0.86" },
+    { name = "pytest", marker = "extra == 'test'", specifier = ">=8.2" },
+    { name = "pytest-codeblocks", marker = "extra == 'test'", specifier = ">=0.17.0" },
+    { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=5.0" },
+    { name = "pytest-doctestplus", marker = "extra == 'test'", specifier = ">=1.4.0" },
+    { name = "pytest-xdist", marker = "extra == 'test'" },
+    { name = "xdoctest", marker = "extra == 'test'", specifier = ">=1.2.0" },
+]
+provides-extras = ["test"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "matplotlib", specifier = ">=3.7.3" },
+    { name = "pandas", specifier = ">=2.2.2" },
+    { name = "seaborn", specifier = ">=0.13.2" },
+    { name = "statsmodels", specifier = ">=0.14.2" },
+]
+notbook-extras = [
+    { name = "ipycache", specifier = ">=0.1.4" },
+    { name = "ipympl", specifier = ">=0.9.5" },
+    { name = "ipywidgets", specifier = ">=8.1.3" },
+    { name = "itables", specifier = ">=2.2.4" },
+    { name = "jupyter", specifier = ">=1.1.1" },
+    { name = "nbconvert", specifier = ">=7.16.4" },
+    { name = "nbqa", specifier = ">=1.9.1" },
+]
+notebook = [
+    { name = "ipykernel", specifier = ">=6.29.5" },
+    { name = "jupyterlab", specifier = ">=3.6.8" },
+]
+notebook-heavy = [
+    { name = "ipyplot", specifier = ">=1.1.2" },
+    { name = "jupyterlab-git", specifier = ">=0.50.2" },
+    { name = "jupyterlab-github", specifier = ">=3.0.1" },
+    { name = "jupyterlab-latex", specifier = ">=4.3.0" },
+    { name = "jupyterlab-spellchecker", specifier = ">=0.8.3" },
+    { name = "jupyterlab-theme-solarized-dark", specifier = ">=3.0.1" },
+]
+tooling = [
+    { name = "boto3-stubs", specifier = ">=1.38.10" },
+    { name = "docformatter", specifier = ">=1.7.7" },
+    { name = "matplotlib-stubs", specifier = ">=0.1.0" },
+    { name = "ml-dtypes", specifier = ">=0.5.1" },
+    { name = "mypy", specifier = ">=1.18.2" },
+    { name = "mypy-boto3-s3", specifier = ">=1.38.0" },
+    { name = "pandas-stubs", specifier = ">=2.2.3.250308" },
+    { name = "pre-commit", specifier = ">=4.3.0" },
+    { name = "pre-commit-uv", specifier = ">=4.2.0" },
+    { name = "ruff", specifier = ">=0.14.0" },
+    { name = "taplo", specifier = ">=0.9.3" },
+    { name = "types-pillow", specifier = ">=10.2.0.20240822" },
+    { name = "types-python-dateutil", specifier = ">=2.9.0.20241206" },
+    { name = "types-pytz", specifier = ">=2025.2.0.20250326" },
+    { name = "types-pyyaml", specifier = ">=6.0.12.20250402" },
+    { name = "types-requests", specifier = ">=2.32.0.20250328" },
+    { name = "types-tqdm", specifier = ">=4.67.0.20250417" },
+    { name = "yamllint", specifier = ">=1.37.1" },
+]
+
+[[package]]
 name = "pytest"
 version = "8.4.2"
 source = { registry = "https://pypi.org/simple" }
@@ -2117,136 +2247,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/8a/11/965c6fd8e5cc254f1fe142d547387da17a8ebfd75a3455f637c663fb38a0/terminado-0.18.1.tar.gz", hash = "sha256:de09f2c4b85de4765f7714688fff57d3e75bad1f909b589fde880460c753fd2e", size = 32701, upload-time = "2024-03-12T14:34:39.026Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6a/9e/2064975477fdc887e47ad42157e214526dcad8f317a948dee17e1659a62f/terminado-0.18.1-py3-none-any.whl", hash = "sha256:a4468e1b37bb318f8a86514f65814e1afc977cf29b3992a4500d9dd305dcceb0", size = 14154, upload-time = "2024-03-12T14:34:36.569Z" },
-]
-
-[[package]]
-name = "test"
-version = "0.0.1"
-source = { virtual = "." }
-dependencies = [
-    { name = "opencv-contrib-python" },
-]
-
-[package.optional-dependencies]
-test = [
-    { name = "hypothesis" },
-    { name = "pytest" },
-    { name = "pytest-codeblocks" },
-    { name = "pytest-cov" },
-    { name = "pytest-doctestplus" },
-    { name = "pytest-xdist" },
-    { name = "xdoctest" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "matplotlib" },
-    { name = "pandas" },
-    { name = "seaborn" },
-    { name = "statsmodels" },
-]
-notbook-extras = [
-    { name = "ipycache" },
-    { name = "ipympl" },
-    { name = "ipywidgets" },
-    { name = "itables" },
-    { name = "jupyter" },
-    { name = "nbconvert" },
-    { name = "nbqa" },
-]
-notebook = [
-    { name = "ipykernel" },
-    { name = "jupyterlab" },
-]
-notebook-heavy = [
-    { name = "ipyplot" },
-    { name = "jupyterlab-git" },
-    { name = "jupyterlab-github" },
-    { name = "jupyterlab-latex" },
-    { name = "jupyterlab-spellchecker" },
-    { name = "jupyterlab-theme-solarized-dark" },
-]
-tooling = [
-    { name = "boto3-stubs" },
-    { name = "docformatter" },
-    { name = "matplotlib-stubs" },
-    { name = "ml-dtypes" },
-    { name = "mypy" },
-    { name = "mypy-boto3-s3" },
-    { name = "pandas-stubs" },
-    { name = "pre-commit" },
-    { name = "pre-commit-uv" },
-    { name = "ruff" },
-    { name = "taplo" },
-    { name = "types-pillow" },
-    { name = "types-python-dateutil" },
-    { name = "types-pytz" },
-    { name = "types-pyyaml" },
-    { name = "types-requests" },
-    { name = "types-tqdm" },
-    { name = "yamllint" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "hypothesis", marker = "extra == 'test'" },
-    { name = "opencv-contrib-python", specifier = "==4.11.0.86" },
-    { name = "pytest", marker = "extra == 'test'", specifier = ">=8.2" },
-    { name = "pytest-codeblocks", marker = "extra == 'test'", specifier = ">=0.17.0" },
-    { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=5.0" },
-    { name = "pytest-doctestplus", marker = "extra == 'test'", specifier = ">=1.4.0" },
-    { name = "pytest-xdist", marker = "extra == 'test'" },
-    { name = "xdoctest", marker = "extra == 'test'", specifier = ">=1.2.0" },
-]
-provides-extras = ["test"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "matplotlib", specifier = ">=3.7.3" },
-    { name = "pandas", specifier = ">=2.2.2" },
-    { name = "seaborn", specifier = ">=0.13.2" },
-    { name = "statsmodels", specifier = ">=0.14.2" },
-]
-notbook-extras = [
-    { name = "ipycache", specifier = ">=0.1.4" },
-    { name = "ipympl", specifier = ">=0.9.5" },
-    { name = "ipywidgets", specifier = ">=8.1.3" },
-    { name = "itables", specifier = ">=2.2.4" },
-    { name = "jupyter", specifier = ">=1.1.1" },
-    { name = "nbconvert", specifier = ">=7.16.4" },
-    { name = "nbqa", specifier = ">=1.9.1" },
-]
-notebook = [
-    { name = "ipykernel", specifier = ">=6.29.5" },
-    { name = "jupyterlab", specifier = ">=3.6.8" },
-]
-notebook-heavy = [
-    { name = "ipyplot", specifier = ">=1.1.2" },
-    { name = "jupyterlab-git", specifier = ">=0.50.2" },
-    { name = "jupyterlab-github", specifier = ">=3.0.1" },
-    { name = "jupyterlab-latex", specifier = ">=4.3.0" },
-    { name = "jupyterlab-spellchecker", specifier = ">=0.8.3" },
-    { name = "jupyterlab-theme-solarized-dark", specifier = ">=3.0.1" },
-]
-tooling = [
-    { name = "boto3-stubs", specifier = ">=1.38.10" },
-    { name = "docformatter", specifier = ">=1.7.7" },
-    { name = "matplotlib-stubs", specifier = ">=0.1.0" },
-    { name = "ml-dtypes", specifier = ">=0.5.1" },
-    { name = "mypy", specifier = ">=1.18.2" },
-    { name = "mypy-boto3-s3", specifier = ">=1.38.0" },
-    { name = "pandas-stubs", specifier = ">=2.2.3.250308" },
-    { name = "pre-commit", specifier = ">=4.3.0" },
-    { name = "pre-commit-uv", specifier = ">=4.2.0" },
-    { name = "ruff", specifier = ">=0.14.0" },
-    { name = "taplo", specifier = ">=0.9.3" },
-    { name = "types-pillow", specifier = ">=10.2.0.20240822" },
-    { name = "types-python-dateutil", specifier = ">=2.9.0.20241206" },
-    { name = "types-pytz", specifier = ">=2025.2.0.20250326" },
-    { name = "types-pyyaml", specifier = ">=6.0.12.20250402" },
-    { name = "types-requests", specifier = ">=2.32.0.20250328" },
-    { name = "types-tqdm", specifier = ">=4.67.0.20250417" },
-    { name = "yamllint", specifier = ">=1.37.1" },
 ]
 
 [[package]]
