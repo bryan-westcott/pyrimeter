@@ -1,3 +1,1 @@
-"""
-Insert code in this directory.
-"""
+"""Insert code in this directory."""

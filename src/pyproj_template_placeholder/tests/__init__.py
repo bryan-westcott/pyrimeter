@@ -1,6 +1,4 @@
-"""
-Tests for project, expects smoke() tests at a minimum.
-"""
+"""Tests for project, expects smoke() tests at a minimum."""
 
 from __future__ import annotations
 
