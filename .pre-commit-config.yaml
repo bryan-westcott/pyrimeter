@@ -147,6 +147,8 @@ repos:
       - id: check-toml
       - id: end-of-file-fixer
       - id: trailing-whitespace
+        args:
+          - --markdown-linebreak-ext=md
       - id: detect-private-key
   #
   # ---------------------------------------------------------
