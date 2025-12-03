@@ -49,7 +49,7 @@ _main() {
     read -rp "CUDA_MINOR_VERSION [${CUDA_MINOR_VERSION:-0}]: " _in
     CUDA_MINOR_VERSION="${_in:-${CUDA_MINOR_VERSION:-0}}"
     [[ "$CUDA_MINOR_VERSION" =~ ^[0-9]+$ ]] && break
-    echo "Please enter a numeric minor version (e.g., 4)."
+    echo "Please enter a numeric minor version (e.g., 6)."
   done
 
 echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
