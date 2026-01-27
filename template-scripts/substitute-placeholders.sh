@@ -63,7 +63,8 @@ echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
 # export CUDA_MAJOR_VERSION CUDA_MINOR_VERSION
 #
   # --- escape for sed ---
-  escape() { printf '%s' "$1" | sed -e 's/[\/&]/\\&/g'; }
+  # Use | not / for sed escaping
+  escape() { printf '%s' "$1" | sed -e 's/[|&\\]/\\&/g'; }
   local PY_MINOR_E NAME_E DESC_E CUDA_MAJOR_E CUDA_MINOR_E
   PY_MINOR_E=$(escape "$PY_MINOR")
   NAME_E=$(escape "$PROJECT_NAME")
@@ -79,7 +80,7 @@ echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
     FILES=("$@")
   else
     shopt -s nullglob dotglob
-    FILES=( "${REPO_ROOT}/templates/base.*" )
+    FILES=( "${REPO_ROOT}/templates/base."* )
     shopt -u nullglob dotglob
   fi
 
@@ -88,11 +89,11 @@ echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
   outplace_sed() {
     local src="$1" dst="$2" tmp
     tmp="${dst}.tmp.$$"
-    sed -e "s/<PYTHON_MINOR_VERSION>/${PY_MINOR_E}/g" \
-        -e "s/<PROJECT_NAME>/${NAME_E}/g" \
-        -e "s/<PROJECT_DESCRIPTION>/${DESC_E}/g" \
-        -e "s/<CUDA_MAJOR_VERSION>/${CUDA_MAJOR_E}/g" \
-        -e "s/<CUDA_MINOR_VERSION>/${CUDA_MINOR_E}/g" \
+    sed -e "s|<PYTHON_MINOR_VERSION>|${PY_MINOR_E}|g" \
+        -e "s|<PROJECT_NAME>|${NAME_E}|g" \
+        -e "s|<PROJECT_DESCRIPTION>|${DESC_E}|g" \
+        -e "s|<CUDA_MAJOR_VERSION>|${CUDA_MAJOR_E}|g" \
+        -e "s|<CUDA_MINOR_VERSION>|${CUDA_MINOR_E}|g" \
         "$src" > "$tmp"
     # atomic changes
     mv "$tmp" "$dst"
@@ -110,7 +111,7 @@ echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
         ;;
       # Special-case: gitignore gets a leading dot
       gitignore)
-        dst="${REPO_ROOT}/.pre-commit-config.yaml"
+        dst="${REPO_ROOT}/.gitignore"
         ;;
       CODEOWNERS)
         # Special-case: CODEOWNERS goes in .github
@@ -128,15 +129,6 @@ echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
       echo "ERROR: Placeholder(s) remain in $dst" >&2
       return 1
     fi
-    # Add more header (reverse order)
-    sed -i "1s/^/#\n/" "$dst"
-    if [[ "$name" == "pre-commit-config.yaml" ]]; then
-      # Add note for why we have an actual
-      sed -i '1s/^/# NOTE: an actual .pre-commit-config.yaml is needed for project to lint itself\n/' "$dst"
-    fi
-    sed -i "1s/^/# CREATED FROM: ${src}\n/" "$dst"
-    sed -i '1s/^/# CREATED BY: substitute-placeholders.sh\n/' "$dst"
-    sed -i '1s/^/# WARNING: THIS FILE IS AUTO-GENERATED, DO NOT EDIT!\n/' "$dst"
 
     # WE NEED AN ACTUAL .pre-commit-config FOR PROJECT TO LINT ITSELF!
 # Pre-commit hooks supporting python, docker and latex
