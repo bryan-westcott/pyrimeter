@@ -108,6 +108,10 @@ echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
       pre-commit-config.yaml)
         dst="${REPO_ROOT}/.pre-commit-config.yaml"
         ;;
+      # Special-case: gitignore gets a leading dot
+      gitignore)
+        dst="${REPO_ROOT}/.pre-commit-config.yaml"
+        ;;
       CODEOWNERS)
         # Special-case: CODEOWNERS goes in .github
         mkdir -p "${REPO_ROOT}/.github"
