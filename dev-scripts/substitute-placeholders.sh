@@ -99,12 +99,21 @@ echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
     [[ -f "$src" ]] || { echo "Skip (not found): $src" >&2; continue; }
     file=$(basename "$src")
     name="${file#base.}"
-    # Special-case: pre-commit config gets a leading dot
-    if [[ "$name" == "pre-commit-config.yaml" ]]; then
-      dst="${REPO_ROOT}/.${name}"
-    else
-      dst="${REPO_ROOT}/${name}"    # pyproject keeps no leading dot
-    fi
+    case "$name" in
+      # Special-case: pre-commit config gets a leading dot
+      pre-commit-config.yaml)
+        dst="${REPO_ROOT}/.pre-commit-config.yaml"
+        ;;
+      CODEOWNERS)
+        # Special-case: CODEOWNERS goes in .github
+        mkdir -p "${REPO_ROOT}/.github"
+        dst="${REPO_ROOT}/.github/CODEOWNERS"
+        ;;
+      *)
+        # Others: just strip base. prefix and put in project root
+        dst="${REPO_ROOT}/${name}"
+        ;;
+    esac
     outplace_sed "$src" "$dst"
     # assert no placeholders remain
     if grep -Eq '<[A-Z_]+>' "$dst"; then
