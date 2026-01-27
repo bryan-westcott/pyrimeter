@@ -1,4 +1,4 @@
-personal_ws-1.1 en 35
+personal_ws-1.1 en 38
 Bolierplate
 CUDA
 Docformatter
@@ -12,6 +12,7 @@ MyPy
 Pandoc
 Proselint
 PyTest
+Pyrimeter
 Reformats
 ShellCheck
 Taplo
@@ -20,6 +21,7 @@ YAML
 Yamlfmt
 Yamllint
 biber
+codebases
 config
 docstrings
 formatter
@@ -27,6 +29,7 @@ jupyter
 linter
 linters
 pre
+prem
 pylint
 pyproj
 pyproject

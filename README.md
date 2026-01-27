@@ -1,6 +1,12 @@
-# pyproj-template
+# Pyrimeter
 
-A modern Python project starter template featuring robust linting, pre-commit automation, and uv-based tooling.
+Guard rails for code (human or AI)
+
+## Overview
+
+**Pyrimeter** defines the boundary between acceptable and unacceptable code.
+It currently ships as a modern Python project template with robust linting, pre-commit automation, and uv-based tooling.
+Its longer-term vision is to act as a protective perimeter around codebases, providing automated checks and policy enforcement for both human-written and generative-AI-produced code, especially local, on-prem tools.
 
 ## Quick start:
 
