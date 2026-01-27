@@ -8,6 +8,46 @@ Guard rails for code (human or AI)
 It currently ships as a modern Python project template with robust linting, pre-commit automation, and uv-based tooling.
 Its longer-term vision is to act as a protective perimeter around codebases, providing automated checks and policy enforcement for both human-written and generative-AI-produced code, especially local, on-prem tools.
 
+In practical terms, Pyrimeter provides a ready-to-use Python project layout with a curated set of linters, formatters, and checks wired together through pre-commit hooks (for local development) and GitHub Actions (for pull requests). Once the placeholder substitution scripts are run, the project is immediately usable, with all tool versions and configuration defined in a single source of truth, ensuring consistent and enforceable code quality checks.
+
+## Pre-commit linters included:
+
+- **Ruff** -- Fast Python linter (replacement for flake8/pylint) and formatter (ruff format).
+- **MyPy** -- Static type checker for Python code using type hints.
+- **Hadolint** -- Dockerfile checker.
+- **Prettier** -- Formatter for JSON, Markdown, YAML, and other text-based formats.
+- **Docformatter** -- Reformats Python docstrings to follow standard width and style.
+- **ShellCheck** -- Static analyzer for Bash and shell scripts.
+- **Yamlfmt** -- Strict YAML formatter.
+- **Yamllint** -- Linter for YAML syntax and structure.
+- **Action-Validator** -- Validator and linter for GitHub Actions workflow files.
+- **Latex** -- Common latex checks.
+- **Taplo** -- Formatter and validator for TOML files (e.g. pyproject.toml).
+- **Aspell** -- Spell checker using local dictionaries.
+- **Proselint** -- Prose linter for English grammar, clarity, and style issues.
+- **Latexmk** -- Builds LaTeX projects automatically and runs bibliography compilation (biber).
+- **Pandoc** -- Converts Markdown documents to PDF and other output formats (when template exists)
+
+## GitHub Actions features
+
+- Primary workflow for pull request: `.github/workflows/pr.yaml`
+  - calls all reusable workflows
+  - dynamically determines which steps are needed to save Github Actions minutes
+  - designed to work with a dispatch call
+- Reusable workflows:
+  - run all code quality checks (same as pre-commit): `.github/workflow/all-code-tests.yaml`
+  - run PyTest tests (currently just `smoke` test): `.github/workflows/all-pytest-tests.yaml`
+- Actions:
+  - same as those for pre-commit hook, with care to match versions and arguments
+
+## Additional features
+
+- Single-source of truth (pyproject.toml) for linter versions
+  - supports synchronization on CI/CD like GitHub actions
+  - pre-commit will self-check its versions
+- Sane default config for tools
+- Tooling, test and notebook support built into `pyproject.toml`
+
 ## Quick start:
 
 1. ## **Initialize pre-commit** (idempotent):
@@ -53,44 +93,6 @@ Its longer-term vision is to act as a protective perimeter around codebases, pro
   ```bash
   dev-scripts/safe-sync.sh
   ```
-
-## Pre-commit linters included:
-
-- **Ruff** -- Fast Python linter (replacement for flake8/pylint) and formatter (ruff format).
-- **MyPy** -- Static type checker for Python code using type hints.
-- **Hadolint** -- Dockerfile checker.
-- **Prettier** -- Formatter for JSON, Markdown, YAML, and other text-based formats.
-- **Docformatter** -- Reformats Python docstrings to follow standard width and style.
-- **ShellCheck** -- Static analyzer for Bash and shell scripts.
-- **Yamlfmt** -- Strict YAML formatter.
-- **Yamllint** -- Linter for YAML syntax and structure.
-- **Action-Validator** -- Validator and linter for GitHub Actions workflow files.
-- **Latex** -- Common latex checks.
-- **Taplo** -- Formatter and validator for TOML files (e.g. pyproject.toml).
-- **Aspell** -- Spell checker using local dictionaries.
-- **Proselint** -- Prose linter for English grammar, clarity, and style issues.
-- **Latexmk** -- Builds LaTeX projects automatically and runs bibliography compilation (biber).
-- **Pandoc** -- Converts Markdown documents to PDF and other output formats (when template exists)
-
-## GitHub Actions features
-
-- Primary workflow for pull request: `.github/workflows/pr.yaml`
-  - calls all reusable workflows
-  - dynamically determines which steps are needed to save Github Actions minutes
-  - designed to work with a dispatch call
-- Reusable workflows:
-  - run all code quality checks (same as pre-commit): `.github/workflow/all-code-tests.yaml`
-  - run PyTest tests (currently just `smoke` test): `.github/workflows/all-pytest-tests.yaml`
-- Actions:
-  - same as those for pre-commit hook, with care to match versions and arguments
-
-## Additional features
-
-- Single-source of truth (pyproject.toml) for linter versions
-  - supports synchronization on CI/CD like GitHub actions
-  - pre-commit will self-check its versions
-- Sane default config for tools
-- Tooling, test and notebook support built into `pyproject.toml`
 
 ## License
 
