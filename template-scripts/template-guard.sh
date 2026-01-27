@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Intended to be SOURCED by dev-scripts/substitute-placeholders.sh
+# Intended to be SOURCED by template-scripts/substitute-placeholders.sh
 # Requires: REPO_ROOT set (absolute path)
 
 pyrimeter_template_guard() {
