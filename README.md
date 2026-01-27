@@ -50,11 +50,21 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
 
 ## Quick start:
 
-1. ## **Initialize pre-commit** (idempotent):
+1. ## **Populate from templates (just once)**
+
+   ```bash
+   ./template-scripts/substitute-placeholders.sh
+   ```
+
+   - Generates `pyroject.toml` and `.pre-commit-config.yaml`
+   - Sets consistent python version throughout
+   - Recommends and configures Torch repositories based on detected CUDA version
+
+2. ## **Initialize pre-commit** (idempotent):
    ```bash
    ./dev-scripts/initialize-pre-commit.sh
    ```
-2. ## **Activate the development environment** (_source don't run_)
+3. ## **Activate the development environment** (_source don't run_)
 
    ```bash
    source dev-scripts/dev-init.sh
@@ -64,16 +74,6 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
    - Synchronized dependencies (safely)
    - Registers the environment as a jupyter kernel
    - Activates the environment
-
-3. ## **Populate from templates**
-
-   ```bash
-   ./dev-scripts/substitute-placeholders.sh
-   ```
-
-   - Generates `pyroject.toml` and `.pre-commit-config.yaml`
-   - Sets consistent python version throughout
-   - Recommends and configures Torch repositories based on detected CUDA version
 
 4. ## **Place modules under:\***
    ```bash
