@@ -3,6 +3,10 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
+# Check for existing .git repo and pyrimeter history
+source "${SCRIPT_DIR}/template-guard.sh"
+pyrimeter_template_guard
+
 _main() {
   # Avoid polluting shell history
   set +o history
