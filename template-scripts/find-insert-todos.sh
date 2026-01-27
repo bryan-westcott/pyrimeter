@@ -8,4 +8,4 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 echo "WARNING: The following files need manual substitution before committing!"
 echo ""
 
-( cd "${REPO_ROOT}" && grep --color=always -ir "TODO: Insert" . )
+( cd "${REPO_ROOT}" && grep --color=always --exclude-dir="template*" -ir "TODO: Insert" . )

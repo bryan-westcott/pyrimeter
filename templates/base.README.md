@@ -10,4 +10,4 @@
 
 ## License
 
-(TODO: Insert license_type), see LICENSE and NOTICE
+<LICENSE_NAME>, see LICENSE and NOTICE
