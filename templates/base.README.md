@@ -1,10 +1,8 @@
-# (TODO: Insert project_name)
-
-(TODO: Insert project_tagline)
+# <PROJECT_NAME>
 
 ## Overview
 
-(TODO: Insert project_overview)
+<PROJECT_DESCRIPTION>
 
 ## Details
 
