@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
 _main() {
   # Avoid polluting shell history
   set +o history
 
   # Snapshot current opts & cwd; harden during run
-  local __orig_pwd __orig_opts script_dir
+  local __orig_pwd __orig_opts
   __orig_pwd="$PWD"
   __orig_opts="$(set +o)"
   set -euo pipefail
   trap 'eval "$__orig_opts"; cd "$__orig_pwd" || true; set +o history; trap - RETURN' RETURN
 
-  # Work from parent of script directory
-  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  cd "$script_dir/.." || { echo "Cannot cd to parent of $script_dir" >&2; return 1; }
+  # Work from project root (parent of script directory)
+  cd "$REPO_ROOT" || { echo "Cannot cd to REPO_ROOT=$REPO_ROOT" >&2; return 1; }
 
   # --- prompts (no defaults) ---
   read -rp "Python minor version (e.g., 11): " PY_MINOR
@@ -73,7 +75,7 @@ echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
     FILES=("$@")
   else
     shopt -s nullglob dotglob
-    FILES=( base.* )
+    FILES=( "${REPO_ROOT}/templates/base.*" )
     shopt -u nullglob dotglob
   fi
 
@@ -95,14 +97,13 @@ echo "Using CUDA ${CUDA_MAJOR_VERSION}.${CUDA_MINOR_VERSION}"
   # --- process each file ---
   for src in "${FILES[@]}"; do
     [[ -f "$src" ]] || { echo "Skip (not found): $src" >&2; continue; }
-    dir=$(dirname "$src")
     file=$(basename "$src")
-    name="${file#base.}"                 # strip leading "base."
-     # Special-case: pre-commit config gets a leading dot
+    name="${file#base.}"
+    # Special-case: pre-commit config gets a leading dot
     if [[ "$name" == "pre-commit-config.yaml" ]]; then
-      dst="${dir}/.${name}"
+      dst="${REPO_ROOT}/.${name}"
     else
-      dst="${dir}/${name}"    # pyproject keeps no leading dot
+      dst="${REPO_ROOT}/${name}"    # pyproject keeps no leading dot
     fi
     outplace_sed "$src" "$dst"
     # assert no placeholders remain
