@@ -142,6 +142,9 @@ repos:
       - id: check-toml
       - id: end-of-file-fixer
       - id: trailing-whitespace
+        args:
+          - --markdown-linebreak-ext=md
+        exclude: ^\.aspell
       - id: detect-private-key
   #
   # ---------------------------------------------------------
