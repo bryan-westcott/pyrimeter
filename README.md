@@ -50,7 +50,7 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
 
 ## Quick start:
 
-0. ## **Download Pyrimeter (on Linux)**
+1. ## **Download Pyrimeter (on Linux)**
    - Note: It is better to curl, if you clone you will have Pyrimeter (and license) in your git history
    - WARNING: verify all commands carefully and use code at your own risk!
 
@@ -63,7 +63,7 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
      | tar -xzf - --strip-components=1 --keep-old-files
    ```
 
-1. ## **Populate from templates (just once)**
+2. ## **Populate from templates (just once)**
 
    ```bash
    ./template-scripts/substitute-placeholders.sh
@@ -73,11 +73,11 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
    - Sets consistent python version throughout
    - Recommends and configures Torch repositories based on detected CUDA version
 
-2. ## **Initialize pre-commit** (idempotent):
+3. ## **Initialize pre-commit** (idempotent):
    ```bash
    ./dev-scripts/initialize-pre-commit.sh
    ```
-3. ## **Activate the development environment** (_source don't run_)
+4. ## **Activate the development environment** (_source don't run_)
 
    ```bash
    source dev-scripts/dev-init.sh
@@ -88,11 +88,11 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
    - Registers the environment as a jupyter kernel
    - Activates the environment
 
-4. ## **Place modules under:\***
+5. ## **Place modules under:\**
    ```bash
    src/<project_name>
    ```
-5. ## **Launch jupyter and select the kernel**
+6. ## **Launch jupyter and select the kernel**
 
    ```bash
    uv run jupyter lab
