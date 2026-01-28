@@ -56,8 +56,9 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
    my_new_project_dir="${HOME}/Projects/my-new-project" && \
    mkdir -p "${my_new_project_dir}" && \
    cd "${my_new_project_dir}" && \
+   set -o pipefail && \
    curl -fL "https://github.com/bryan-westcott/pyrimeter/archive/refs/heads/main.tar.gz" \
-       | tar -xzf - --strip-components=1
+     | tar -xzf - --strip-components=1 --keep-old-files
    ```
 
    - Note: It is better to curl, if you clone you will have Pyrimeter (and license) in your git history
