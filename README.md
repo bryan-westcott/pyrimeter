@@ -96,4 +96,4 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
 
 ## License
 
-Apache 2.0, see LICENSE and NOTICE
+Apache 2.0, see [LICENSE](LICENSE) and [NOTICE](NOTICE)
