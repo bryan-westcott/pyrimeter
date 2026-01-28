@@ -50,6 +50,16 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
 
 ## Quick start:
 
+0. ## **Download Pyrimeter**
+
+   ```bash
+   mkdir -p ~/Projects/my-new-project && cd ~/Projects/my-new-project
+   curl -fL "https://github.com/bryan-westcott/pyrimeter/archive/refs/heads/main.tar.gz" \
+       | tar -xzf - --strip-components=1
+   ```
+
+   - Note: It is better to curl, if you clone you will have Pyrimeter (and license) in your git history
+
 1. ## **Populate from templates (just once)**
 
    ```bash
@@ -89,9 +99,14 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
 
 ## Helper Utils:
 
-- ## safe synchronization:
+- ### safe synchronization (prep and sync environment as needed):
   ```bash
   dev-scripts/safe-sync.sh
+  ```
+- ### spell check failure (re-check and add to dictionary):
+  ```bash
+  dev-scripts/spell-checkfile.sh <file-to-check>
+  git add <file-to-check> .aspell*
   ```
 
 ## License
