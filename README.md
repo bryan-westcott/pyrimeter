@@ -53,7 +53,7 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
 0. ## **Download Pyrimeter**
 
    ```bash
-   my_new_project_dir="~/Projects/my-new-project" && \
+   my_new_project_dir="${HOME}/Projects/my-new-project" && \
    mkdir -p "${my_new_project_dir}" && \
    cd "${my_new_project_dir}" && \
    curl -fL "https://github.com/bryan-westcott/pyrimeter/archive/refs/heads/main.tar.gz" \
