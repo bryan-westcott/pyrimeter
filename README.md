@@ -88,7 +88,7 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
    - Registers the environment as a jupyter kernel
    - Activates the environment
 
-5. ## **Place modules under:\**
+5. ## **Place modules under:**
    ```bash
    src/<project_name>
    ```
