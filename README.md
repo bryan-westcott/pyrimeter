@@ -50,7 +50,9 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
 
 ## Quick start:
 
-0. ## **Download Pyrimeter**
+0. ## **Download Pyrimeter (on Linux)**
+   - Note: It is better to curl, if you clone you will have Pyrimeter (and license) in your git history
+   - WARNING: verify all commands carefully and use code at your own risk!
 
    ```bash
    my_new_project_dir="${HOME}/Projects/my-new-project" && \
@@ -60,8 +62,6 @@ In practical terms, Pyrimeter provides a ready-to-use Python project layout with
    curl -fL "https://github.com/bryan-westcott/pyrimeter/archive/refs/heads/main.tar.gz" \
      | tar -xzf - --strip-components=1 --keep-old-files
    ```
-
-   - Note: It is better to curl, if you clone you will have Pyrimeter (and license) in your git history
 
 1. ## **Populate from templates (just once)**
 
