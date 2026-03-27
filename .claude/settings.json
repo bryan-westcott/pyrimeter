@@ -1,0 +1,26 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "deny": [
+      "Bash(uv sync)",
+      "Bash(uv sync *)"
+    ],
+    "allow": [
+      "Bash(git status *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git diff *)",
+      "Bash(git branch *)",
+      "Bash(uv run ruff check *)",
+      "Bash(uv run ruff format *)",
+      "Bash(uv run mypy *)",
+      "Bash(uv run pytest *)",
+      "Bash(uv run pre-commit run *)",
+      "Bash(dev-scripts/safe-sync.sh *)",
+      "Bash(pre-commit run *)"
+    ]
+  }
+}

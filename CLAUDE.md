@@ -42,6 +42,8 @@ curl -fL "https://github.com/bryan-westcott/pyrimeter/archive/refs/heads/main.ta
   `src/${PROJECT_NAME}/` and substitutes placeholders in its `.py` files
 - After substitution, `template-scripts/find-insert-todos.sh` scans for any
   remaining `TODO: Insert` markers that need manual attention
+- `.claude/settings.json` ships directly (no substitution needed) with
+  permission rules and attribution settings for downstream projects
 
 ## Package management
 
