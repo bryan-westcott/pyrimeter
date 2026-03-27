@@ -11,7 +11,7 @@ on:
   # Allow call trigger
   workflow_call:
 jobs:
-  run-all-code-checks:
+  run-all-pytest-tests:
     name: Run all pytest-tests
     # TODO: this will need to be a GPU
     runs-on: ubuntu-latest
