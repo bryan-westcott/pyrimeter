@@ -6,7 +6,10 @@
 - `pyproject.toml` is the single source of truth for all dependencies and tool versions
 - Sync environment: `dev-scripts/safe-sync.sh`
 - Activate environment: `source dev-scripts/dev-init.sh` (must be **sourced**, not executed)
-- Add dependencies to the appropriate group in `pyproject.toml`, then run `uv sync`
+- Add dependencies to the appropriate group in `pyproject.toml`, then run `dev-scripts/safe-sync.sh`
+- **Do not run `uv sync` directly** — it is denied in `.claude/settings.json`.
+  `safe-sync.sh` auto-detects dependency groups (notebook, tooling, test) and
+  passes the correct flags; raw `uv sync` will miss them
 
 ## Project layout
 
@@ -50,7 +53,6 @@
 ```bash
 source dev-scripts/dev-init.sh        # activate environment
 dev-scripts/safe-sync.sh              # sync environment (detects groups/extras)
-uv sync                               # sync dependencies (manual, no group detection)
 pre-commit run -a                     # run all linters
 uv run pytest -m smoke                # run smoke tests
 uv run jupyter lab                    # launch Jupyter (kernel matches project name)
