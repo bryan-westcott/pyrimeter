@@ -1706,7 +1706,7 @@ dev = [
     { name = "seaborn" },
     { name = "statsmodels" },
 ]
-notbook-extras = [
+notebook-extras = [
     { name = "ipycache" },
     { name = "ipympl" },
     { name = "ipywidgets" },
@@ -1769,7 +1769,7 @@ dev = [
     { name = "seaborn", specifier = ">=0.13.2" },
     { name = "statsmodels", specifier = ">=0.14.2" },
 ]
-notbook-extras = [
+notebook-extras = [
     { name = "ipycache", specifier = ">=0.1.4" },
     { name = "ipympl", specifier = ">=0.9.5" },
     { name = "ipywidgets", specifier = ">=8.1.3" },
