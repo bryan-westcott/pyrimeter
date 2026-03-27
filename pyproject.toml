@@ -36,7 +36,7 @@ notebook = [
 ]
 
 # these are nice to have and fairly lightweight
-notbook-extras = [
+notebook-extras = [
   "jupyter>=1.1.1",
   "nbconvert>=7.16.4",
   "nbqa>=1.9.1",

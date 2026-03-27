@@ -268,11 +268,20 @@ _main() {
     cp -f "${REPO_ROOT}/templates/apache2.LICENSE_TEXT" "${REPO_ROOT}/LICENSE"
   fi
 
-  # --- make a placeholder directory ---
-  mkdir -p "src/${PROJECT_NAME}"
-  placeholder_file="src/${PROJECT_NAME}/place_python_files_here.txt"
-  touch "${placeholder_file}"
-  echo "Created: ${placeholder_file}"
+  # --- rename and update source directory ---
+  local src_placeholder="src/pyproj_template_placeholder"
+  local src_target="src/${PROJECT_NAME}"
+  if [[ -d "$src_placeholder" ]]; then
+    # Substitute placeholders in source files
+    find "$src_placeholder" -type f -name '*.py' -exec \
+      sed -i -e "s|<PROJECT_NAME>|${NAME_E}|g" {} +
+    # Rename directory
+    mv "$src_placeholder" "$src_target"
+    echo "Renamed: $src_placeholder -> $src_target"
+  else
+    mkdir -p "$src_target"
+    echo "Created: $src_target"
+  fi
 
   echo "Done."
 

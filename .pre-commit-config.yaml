@@ -119,8 +119,8 @@ repos:
       # ---------------------------------------------------------
       # yamlfmt hook version update
       # ---------------------------------------------------------
-      - id: update-uv-pre-commit-version-from-pyproject-toml
-        name: update uv-pre-commit version in pre-commit
+      - id: update-yamlfmt-version-from-pyproject-toml
+        name: update yamlfmt version in pre-commit
         entry: /bin/bash -c "dev-scripts/update-pre-commit-versions-from-pyproject-toml.sh yamlfmt"
         language: script
         require_serial: true
