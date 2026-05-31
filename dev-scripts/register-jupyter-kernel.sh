@@ -40,7 +40,19 @@ register_jupyter_kernel() {
 
     # register jupyter kernel, but only if notebook in pyproject.toml
     if [ "${HAS_NOTEBOOK_GROUP?}" -eq 1 ]; then
-      KERNEL_NAME="$(basename "${PROJECT_ROOT?}")"
+      # Read kernel name from [project] name in pyproject.toml so it stays
+      # consistent regardless of what the local checkout directory is named.
+      # awk tracks the current section and emits the quoted value of `name =`
+      # only when we are inside [project], so a `name = "..."` inside e.g.
+      # [[tool.uv.index]] is ignored.
+      KERNEL_NAME="$(awk -F'"' '
+        /^\[/                                       { section=$0 }
+        section=="[project]" && /^name[[:space:]]*=/{ print $2; exit }
+      ' "${PYPROJECT_FILE?}")"
+      if [ -z "${KERNEL_NAME:-}" ]; then
+        KERNEL_NAME="$(basename "${PROJECT_ROOT?}")"
+        echo "⚠️  Could not read [project].name from $PYPROJECT_FILE; falling back to directory basename: ${KERNEL_NAME}" >&2
+      fi
       echo "🧠 Registering Jupyter kernel: ${KERNEL_NAME?}..."
       if ! uv run ipython kernel install \
             --user \
